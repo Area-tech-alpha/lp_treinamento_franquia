@@ -5,7 +5,6 @@ import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/primitives";
 import { Footer } from "@/components/sections/Footer";
 import { Header } from "@/components/sections/Header";
-import { LeadEvent } from "@/components/tracking/LeadEvent";
 
 export const metadata: Metadata = {
   title: "Recebemos! | Alpha Business School",
@@ -17,22 +16,24 @@ export default function ObrigadoPage() {
   return (
     <>
       <Header />
-      <main className="glow-sides flex min-h-[100svh] items-center px-6 pt-28 pb-20 md:px-10">
+      <main className="glow-sides flex min-h-[100svh] items-center px-5 pt-24 pb-16 md:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <div className="flex justify-center">
-            <AbsSymbol className="size-28 md:size-36" />
+            <AbsSymbol className="size-24 md:size-28" />
           </div>
-          <h1 className="mt-12 text-4xl leading-tight font-medium tracking-tight text-balance md:text-6xl">
+          <h1 className="mt-10 text-3xl leading-tight font-medium tracking-tight text-balance md:text-5xl">
             {thanks.title}
           </h1>
-          <Button href={thanks.cta.href} className="mt-10">
-            <Icon name="whatsapp" className="size-6" />
-            {thanks.cta.label}
-          </Button>
+          {/* Só aparece se NEXT_PUBLIC_WHATSAPP_URL existir */}
+          {thanks.cta && (
+            <Button href={thanks.cta.href} className="mt-10">
+              <Icon name="whatsapp" className="size-5" />
+              {thanks.cta.label}
+            </Button>
+          )}
         </div>
       </main>
       <Footer />
-      <LeadEvent />
     </>
   );
 }

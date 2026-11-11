@@ -5,6 +5,13 @@
 }
 
 @theme {
+  /* Com o html em 87,5% (mobile) e 75% (desktop), text-sm/text-xs = 1rem
+     garantem o mínimo de 14px no mobile e 12px no desktop. */
+  --text-xs: 1rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.5;
+
   --color-ink: #0a0a0a;
   --color-ink-2: #121212;
   --color-ink-3: #1b1b1b;
@@ -39,9 +46,35 @@
   }
 }
 
+/* Escala global: o Tailwind v4 é todo em rem, então fonte, espaçamento,
+   botões, cards e containers escalam juntos. */
 html {
+  font-size: 87.5%; /* mobile: 14px */
   scroll-behavior: smooth;
-  scroll-padding-top: 5.5rem;
+}
+@media (min-width: 1024px) {
+  html {
+    font-size: 75%; /* desktop: 12px */
+  }
+}
+
+/* iOS: inputs com menos de 16px disparam zoom automático. */
+@media (max-width: 1023px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Âncoras: descontam o menu fixo (64px no mobile, 72px a partir de lg). */
+section[id] {
+  scroll-margin-top: 4rem;
+}
+@media (min-width: 64rem) {
+  section[id] {
+    scroll-margin-top: 4.5rem;
+  }
 }
 
 body {

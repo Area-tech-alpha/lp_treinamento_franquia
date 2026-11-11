@@ -1,17 +1,19 @@
 import Link from "next/link";
 
-/* Escala tipográfica e de espaçamento (referência: staage.com) ---------------- */
+/* Escala tipográfica e de espaçamento ---------------------------------------- */
 
 /** Padding vertical padrão das seções. */
-export const sectionY = "py-20 md:py-28 lg:py-36";
+export const sectionY = "py-16 md:py-24 lg:py-28";
 /** Texto corrido. */
-export const leadText = "text-lg md:text-xl leading-relaxed";
+export const leadText = "text-base md:text-lg leading-relaxed";
 /** Título de card. */
-export const cardTitle = "text-xl md:text-2xl font-semibold leading-snug";
-/** Texto de card. */
-export const cardText = "text-base md:text-lg leading-relaxed";
+export const cardTitle = "text-lg md:text-xl font-semibold leading-snug";
+/** Texto de card (nunca menor que 14px). */
+export const cardText = "text-sm md:text-base leading-relaxed";
 /** Padding de card. */
-export const cardPad = "p-8 lg:p-10";
+export const cardPad = "p-6 lg:p-8";
+/** Números grandes (Seção 3 e etapas da Seção 5). */
+export const bigNumber = "text-5xl lg:text-6xl leading-none font-semibold tracking-tight text-alpha";
 
 export function Container({
   children,
@@ -21,7 +23,7 @@ export function Container({
   className?: string;
 }) {
   return (
-    <div className={`mx-auto w-full max-w-7xl px-6 md:px-10 ${className}`}>
+    <div className={`mx-auto w-full max-w-6xl px-5 md:px-8 ${className}`}>
       {children}
     </div>
   );
@@ -44,7 +46,7 @@ export function Label({
   );
 }
 
-/** H2 das seções: text-3xl no mobile, text-5xl no desktop. */
+/** H2 das seções: 30px → 36px → 44px. */
 export function Heading({
   children,
   className = "",
@@ -54,7 +56,7 @@ export function Heading({
 }) {
   return (
     <h2
-      className={`text-3xl leading-[1.1] font-medium tracking-tight text-balance md:text-5xl ${className}`}
+      className={`text-3xl leading-[1.15] font-medium tracking-tight text-balance md:text-4xl lg:text-[2.75rem] ${className}`}
     >
       {children}
     </h2>
@@ -110,14 +112,14 @@ const buttonBase =
   "inline-flex items-center justify-center gap-3 rounded-lg font-bold whitespace-nowrap transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alpha disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0";
 
 const buttonSizes = {
-  /** CTA principal: w-full no celular, 420px no desktop. */
-  cta: "h-16 w-full px-8 text-xl sm:h-[76px] sm:w-[420px] sm:text-2xl",
-  /** Mesmo CTA ocupando toda a largura disponível (formulário). */
-  ctaFull: "h-16 w-full px-8 text-xl sm:h-[76px] sm:text-2xl",
-  /** Mesmo formato, texto menor (para rótulos longos). */
-  ctaCompact: "h-16 w-full px-6 text-lg sm:h-[76px] sm:w-[420px] sm:text-xl",
+  /** CTA principal: w-full no celular, mínimo 340px a partir de sm. */
+  cta: "h-14 lg:h-16 w-full sm:w-auto sm:min-w-85 px-8 text-lg",
+  /** Mesmo CTA ocupando toda a largura disponível (formulário, menu mobile). */
+  ctaFull: "h-14 lg:h-16 w-full px-8 text-lg",
+  /** Botão do formulário (compacto, largura total). */
+  form: "h-12 lg:h-14 w-full px-6 text-base lg:text-lg",
   /** Botão do menu. */
-  menu: "h-12 px-6 text-base",
+  menu: "h-10 px-5 text-sm",
 };
 
 const buttonVariants = {
@@ -163,7 +165,7 @@ export function Tag({
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-semibold tracking-[0.12em] uppercase ${
+      className={`inline-flex items-center rounded-full border px-3.5 py-1 text-sm font-semibold tracking-[0.1em] uppercase ${
         light
           ? "border-ink/15 bg-ink/5 text-ink"
           : "border-alpha/35 bg-alpha/10 text-alpha"

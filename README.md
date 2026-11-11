@@ -16,8 +16,6 @@ Antes de subir alterações, rode `npm run lint` e `npm run build`.
 
 Os dados que o briefing deixou em aberto ([X], [nome], [data] etc.) estão como `null` em `content/abs.ts`. Enquanto forem `null`, o elemento some da tela. A lista completa do que falta está no comentário no topo desse arquivo.
 
-Sem `LEAD_WEBHOOK_URL` no ambiente local, o formulário funciona normalmente e o lead aparece só no terminal.
-
 ## Onde editar
 
 | O quê | Onde |
@@ -36,21 +34,19 @@ Na Vercel, cadastre em **Project → Settings → Environment Variables**, marca
 
 | Variável | Obrigatória | Para que serve |
 |---|---|---|
-| `LEAD_WEBHOOK_URL` | Sim | Webhook do n8n que recebe os leads (planilha + WhatsApp). Fica só no servidor e nunca vai para o navegador. |
-| `NEXT_PUBLIC_WHATSAPP_URL` | Sim | WhatsApp do time, ex.: `https://wa.me/5511999999999`. |
-| `NEXT_PUBLIC_SITE_URL` | Sim (produção) | Domínio final, ex.: `https://www.alphabusinessschool.com.br`. Usada na OG image, no canonical e no sitemap. Se ficar vazia, a Vercel usa o domínio de produção do projeto. |
-| `NEXT_PUBLIC_META_PIXEL_ID` | Não | ID do Meta Pixel. |
-| `NEXT_PUBLIC_GTM_ID` | Não | Container do GTM (`GTM-XXXXXXX`) ou ID do GA4 direto (`G-XXXXXXXXXX`). |
+| `LEAD_WEBHOOK_URL` | Sim | Webhook (n8n) que recebe os leads: planilha + mensagem no WhatsApp. Fica só no servidor e nunca vai para o navegador. Sem ela, o formulário dá erro em produção. |
+| `NEXT_PUBLIC_SITE_URL` | Sim | Domínio do site, ex.: `https://www.alphabusinessschool.com.br`. Usada na OG image, no canonical e no sitemap. |
+| `NEXT_PUBLIC_WHATSAPP_URL` | Não | WhatsApp do time (`https://wa.me/55...`). Só é usado no botão "Falar com o time agora" da página `/obrigado`. Sem ela, o botão fica oculto. |
 
 As variáveis `NEXT_PUBLIC_*` são lidas no build. Depois de alterar uma delas, faça um novo deploy (**Deployments → ⋯ → Redeploy**).
 
-## Formulário e rastreamento
+## Formulário e envio do lead
 
-- O formulário faz `POST /api/lead`. A validação (zod) roda no navegador e no servidor, e o servidor repassa o lead para `LEAD_WEBHOOK_URL`.
-- O payload leva os campos do formulário, as UTMs (`utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`), `whatsapp_digitos` (com 55), `origem`, `pagina` e `enviado_em`.
-- As UTMs são lidas da URL na chegada e guardadas na sessão do navegador. Assim continuam valendo mesmo se a pessoa navegar antes de preencher.
-- PageView do Pixel e do GTM/GA4 em todas as páginas. O evento **Lead** (Pixel `Lead` e `generate_lead` no dataLayer/GA4) dispara **somente** em `/obrigado`, e só quando a pessoa chega pelo envio do formulário. Recarregar a página não duplica o evento.
-- Se usar GTM: crie no container a tag do GA4 e um gatilho para o evento `generate_lead`.
+- Todos os botões da página rolam até o formulário (`#formulario`). Nenhum leva para fora da LP.
+- Na primeira página da sessão, o site guarda (first-touch, em `sessionStorage`) `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `utm_id`, `gclid`, `fbclid`, a `landing_page` e o `referrer`. Esses valores vão em campos ocultos do formulário.
+- O formulário faz `POST /api/lead`. A validação (zod) roda no navegador e no servidor. O servidor monta o JSON abaixo e envia para `LEAD_WEBHOOK_URL`, com timeout de 10 s. Se o webhook responder fora de 2xx, a API devolve 502 e o formulário mostra um erro, sem redirecionar.
+- Chaves enviadas ao webhook (string vazia quando não houver valor): `nome`, `whatsapp` (só dígitos, com 55), `whatsapp_formatado`, `email`, `agencia`, `faturamento`, `tamanho_time`, `investimento`, `inicio`, `consentimento`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `utm_id`, `gclid`, `fbclid`, `landing_page`, `referrer`, `pagina_envio`, `user_agent`, `ip`, `origem` (`lp-alpha-business-school`) e `enviado_em` (ISO 8601, horário de São Paulo).
+- Sem `LEAD_WEBHOOK_URL` no ambiente local, o envio funciona e o JSON aparece só no terminal.
 
 ## Deploy na Vercel
 
@@ -59,6 +55,8 @@ As variáveis `NEXT_PUBLIC_*` são lidas no build. Depois de alterar uma delas, 
 3. Cadastre as variáveis acima e clique em **Deploy**.
 
 Cada push na `main` gera um deploy de produção, e cada push em outras branches (como a `develop`) gera um preview. Os previews não são indexados (`robots.txt` bloqueia), e `/obrigado` tem `noindex`.
+
+No primeiro deploy, confira no log se aparecem `Detected Next.js version` e `Running onBuildComplete from Vercel`. Se não aparecerem e o site responder 404, o projeto estava configurado com outro framework: ajuste o preset para Next.js e faça um redeploy.
 
 ## Apontar o domínio
 
