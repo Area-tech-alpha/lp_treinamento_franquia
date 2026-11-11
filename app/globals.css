@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme {
+  --color-ink: #0a0a0a;
+  --color-ink-2: #121212;
+  --color-ink-3: #1b1b1b;
+  /* Cor oficial da marca: #FFAB00. Tons derivados para hover/glow. */
+  --color-alpha: #ffab00;
+  --color-alpha-light: #ffc040; /* hover (≈ #FFAB00 + 25% branco) */
+  --color-alpha-dark: #cc8900; /* contraste em fundo claro */
+  --color-muted: #a3a3a3;
+  --color-muted-dark: #5c5c5c;
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-spin-slow: spin 60s linear infinite;
+  --animate-pulse-glow: pulse-glow 4s ease-in-out infinite;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 0.9;
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  background: var(--color-ink);
+  color: #fff;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-alpha);
+  color: var(--color-ink);
+}
+
+/* Glow âmbar nas laterais das seções escuras */
+@utility glow-sides {
+  background:
+    radial-gradient(
+      38rem 30rem at -12% 25%,
+      color-mix(in oklab, var(--color-alpha) 20%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      34rem 28rem at 112% 78%,
+      color-mix(in oklab, var(--color-alpha) 18%, transparent),
+      transparent 70%
+    ),
+    var(--color-ink);
+}
+
+/* Símbolo ABS (alpha-simbolo.png) em âmbar luminoso */
+@utility abs-glow {
+  filter: drop-shadow(0 0 6px rgba(255, 171, 0, 0.95))
+    drop-shadow(0 0 22px rgba(255, 171, 0, 0.7))
+    drop-shadow(0 0 60px rgba(255, 171, 0, 0.45));
+}
+
+/* Entrada no scroll (components/ui/Reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-float,
+  .animate-spin-slow,
+  .animate-pulse-glow {
+    animation: none;
+  }
+}
+
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
