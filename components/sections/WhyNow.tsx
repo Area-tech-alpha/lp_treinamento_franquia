@@ -23,7 +23,7 @@ export function WhyNow() {
           <Heading className="mx-auto max-w-3xl text-center">{whyNow.title}</Heading>
         </Reveal>
 
-        <ul className={`mt-12 grid grid-cols-1 gap-5 lg:gap-6 ${cols}`}>
+        <ul className={`mt-8 grid grid-cols-1 gap-5 ${cols}`}>
           {items.map((item, i) => (
             <Reveal as="li" key={item.title} delay={i * 90}>
               <div className={`h-full rounded-2xl border border-alpha/20 bg-ink-2 ${cardPad}`}>
@@ -37,7 +37,7 @@ export function WhyNow() {
           ))}
         </ul>
 
-        <Reveal className="mt-10 flex justify-center">
+        <Reveal className="mt-8 flex justify-center">
           <Button href={whyNow.cta.href}>{whyNow.cta.label}</Button>
         </Reveal>
       </Container>

@@ -22,7 +22,7 @@ export function Deliverables() {
           <Heading className="max-w-3xl">{deliverables.title}</Heading>
         </Reveal>
 
-        <ul className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        <ul className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-5">
           {deliverables.pillars.map((p, i) => (
             <Reveal as="li" key={p.title} delay={(i % 3) * 80}>
               <div
@@ -88,7 +88,7 @@ export function Deliverables() {
           </div>
         </Reveal>
 
-        <Reveal className="mt-10 flex justify-center">
+        <Reveal className="mt-8 flex justify-center">
           <Button href={deliverables.cta.href}>{deliverables.cta.label}</Button>
         </Reveal>
       </Container>

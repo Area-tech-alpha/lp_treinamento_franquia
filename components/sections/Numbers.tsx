@@ -57,7 +57,7 @@ export function Numbers() {
       <Container>
         <Heading className="mx-auto max-w-3xl text-center">{numbers.title}</Heading>
 
-        <ul className={`mt-12 grid grid-cols-1 gap-5 lg:gap-6 ${COLS[items.length] ?? COLS[4]}`}>
+        <ul className={`mt-8 grid grid-cols-1 gap-5 ${COLS[items.length] ?? COLS[4]}`}>
           {items.map((item, i) => (
             <Reveal as="li" key={item.label} delay={i * 80}>
               <div className={`h-full rounded-2xl border border-alpha/25 bg-ink/70 backdrop-blur-md ${cardPad}`}>
@@ -68,7 +68,7 @@ export function Numbers() {
           ))}
         </ul>
 
-        <p className="mt-12 text-center text-lg font-medium text-white md:text-xl">
+        <p className="mt-8 text-center text-lg font-medium text-white md:text-xl">
           {numbers.closing}
         </p>
       </Container>

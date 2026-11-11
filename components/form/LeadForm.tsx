@@ -27,7 +27,7 @@ const FIELD_ORDER: Field[] = [
 // Inputs h-11; no mobile, altura mínima de 40px reais e fonte de 16px (globals.css)
 // para o iOS não dar zoom.
 const inputCls =
-  "block h-11 w-full rounded-lg border bg-white px-4 text-base text-ink placeholder:text-ink/40 outline-none transition focus:border-alpha focus:ring-4 focus:ring-alpha/25 max-lg:h-[2.875rem]";
+  "block h-11 w-full rounded-lg border bg-white px-4 text-base text-ink placeholder:text-ink/40 outline-none transition focus:border-alpha focus:ring-4 focus:ring-alpha/25";
 
 export function LeadForm() {
   const router = useRouter();
@@ -118,7 +118,7 @@ export function LeadForm() {
 
   const textInput = (f: TextField, props: React.InputHTMLAttributes<HTMLInputElement>) => (
     <div>
-      <label htmlFor={f} className="mb-1.5 block text-sm font-semibold text-ink">
+      <label htmlFor={f} className="mb-1 block text-sm font-semibold text-ink">
         {form.labels[f]}
       </label>
       <input
@@ -143,7 +143,7 @@ export function LeadForm() {
   // Opções em chips (flex-wrap, largura pelo conteúdo). Radio real (sr-only) com foco visível.
   const choiceGroup = (f: ChoiceField) => (
     <div role="radiogroup" aria-labelledby={`${f}-label`}>
-      <p id={`${f}-label`} className="mb-1.5 text-sm font-semibold text-ink">
+      <p id={`${f}-label`} className="mb-1 text-sm font-semibold text-ink">
         {form.labels[f]}
       </p>
       <div className="flex flex-wrap gap-2">
@@ -152,7 +152,7 @@ export function LeadForm() {
           return (
             <label
               key={opt}
-              className={`inline-flex h-10 cursor-pointer items-center rounded-full border px-4 text-sm font-medium whitespace-nowrap transition has-focus-visible:ring-4 has-focus-visible:ring-alpha/40 max-lg:h-auto max-lg:min-h-[2.875rem] ${
+              className={`inline-flex h-10 cursor-pointer items-center rounded-full border px-4 text-sm font-medium whitespace-nowrap transition has-focus-visible:ring-4 has-focus-visible:ring-alpha/40 lg:h-9 ${
                 checked
                   ? "border-alpha bg-alpha text-black"
                   : `bg-white text-ink hover:border-ink/40 ${errors[f] ? "border-red-400" : "border-ink/15"}`
@@ -187,9 +187,9 @@ export function LeadForm() {
       ref={formRef}
       onSubmit={onSubmit}
       noValidate
-      className="flex flex-col gap-4 rounded-2xl bg-white p-6 text-ink shadow-[0_40px_100px_-40px_rgba(255,171,0,0.45)] lg:p-7"
+      className="flex flex-col gap-4 rounded-2xl bg-white p-6 text-ink shadow-[0_40px_100px_-40px_rgba(255,171,0,0.45)] lg:gap-3 lg:p-7"
     >
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-3">
         {textInput("nome", { type: "text", autoComplete: "name", placeholder: "Seu nome" })}
         {textInput("whatsapp", {
           type: "tel",
@@ -223,7 +223,7 @@ export function LeadForm() {
       ))}
 
       <div>
-        <label className="flex cursor-pointer items-center gap-3 text-sm text-ink/80 max-lg:min-h-[2.875rem]">
+        <label className="flex cursor-pointer items-center gap-3 text-sm text-ink/80 max-lg:min-h-10">
           <input
             type="checkbox"
             data-field="consentimento"

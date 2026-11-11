@@ -10,7 +10,7 @@ export function Footer() {
 
   return (
     <footer className="border-t border-white/10 bg-ink">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-12 md:px-8 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mx-auto flex max-w-[1240px] flex-col gap-8 px-5 py-12 md:px-8 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-col gap-3">
           <Logo />
           <p className="flex items-center gap-2.5 text-sm text-white/60">
@@ -35,7 +35,7 @@ export function Footer() {
       </div>
       {footer.cnpj && (
         <div className="border-t border-white/10">
-          <p className="mx-auto max-w-6xl px-5 py-5 text-sm text-white/50 md:px-8">
+          <p className="mx-auto max-w-[1240px] px-5 py-5 text-sm text-white/50 md:px-8">
             CNPJ {footer.cnpj}
           </p>
         </div>

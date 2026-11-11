@@ -14,13 +14,13 @@ export function LeadSection() {
   return (
     <section
       id="formulario"
-      className="glow-sides py-16 md:py-24 lg:flex lg:min-h-[calc(100vh-4.5rem)] lg:items-center lg:py-8"
+      className="glow-sides py-12 md:py-16 lg:flex lg:min-h-[calc(100vh-72px)] lg:items-center lg:py-6"
     >
       <div className="w-full">
         {/* Faixa de logos: só aparece quando houver logos em content/abs.ts */}
         {logos.items.length > 0 && (
           <Container>
-            <Reveal className="mb-12">
+            <Reveal className="mb-8">
               <p className="text-center text-sm font-semibold tracking-[0.2em] text-white/60 uppercase">
                 {logos.title}
               </p>
@@ -43,12 +43,12 @@ export function LeadSection() {
           </Container>
         )}
 
-        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 md:px-8 lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-center lg:gap-10 xl:grid-cols-[24rem_minmax(0,1fr)]">
+        <div className="mx-auto grid w-full max-w-[1240px] gap-8 px-5 md:px-8 lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-center lg:gap-10 xl:grid-cols-[24rem_minmax(0,1fr)]">
           <Reveal>
             <h2 className="text-3xl leading-[1.15] font-medium tracking-tight text-balance lg:text-4xl">
               {form.title}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">{form.text}</p>
+            <p className="mt-3 text-lg leading-relaxed text-muted">{form.text}</p>
           </Reveal>
           <Reveal delay={100}>
             <LeadForm />

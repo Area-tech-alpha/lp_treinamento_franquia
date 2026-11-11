@@ -16,19 +16,19 @@ export function Audience() {
   return (
     <section className={`bg-white text-ink ${sectionY}`}>
       <Container>
-        <div className="grid items-end gap-8 lg:grid-cols-2">
+        <div className="grid items-center gap-8 lg:grid-cols-2">
           <Reveal>
             <Heading>{audience.title}</Heading>
           </Reveal>
           <Reveal delay={80}>
-            <div className="relative h-50 overflow-hidden rounded-2xl sm:h-65">
+            <div className="relative h-52 overflow-hidden rounded-2xl sm:h-64">
               <Photo img={audience.image} sizes="(min-width: 1024px) 50vw, 100vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/40 to-transparent" />
             </div>
           </Reveal>
         </div>
 
-        <ul className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2">
           {audience.items.map((item, i) => (
             <Reveal as="li" key={item.title} delay={i * 80}>
               <div

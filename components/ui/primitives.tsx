@@ -3,13 +3,13 @@ import Link from "next/link";
 /* Escala tipográfica e de espaçamento ---------------------------------------- */
 
 /** Padding vertical padrão das seções. */
-export const sectionY = "py-16 md:py-24 lg:py-28";
+export const sectionY = "py-12 md:py-16 lg:py-20";
 /** Texto corrido. */
-export const leadText = "text-base md:text-lg leading-relaxed";
+export const leadText = "text-lg leading-relaxed";
 /** Título de card. */
-export const cardTitle = "text-lg md:text-xl font-semibold leading-snug";
+export const cardTitle = "text-xl lg:text-2xl font-semibold leading-snug";
 /** Texto de card (nunca menor que 14px). */
-export const cardText = "text-sm md:text-base leading-relaxed";
+export const cardText = "text-base lg:text-lg leading-relaxed";
 /** Padding de card. */
 export const cardPad = "p-6 lg:p-8";
 /** Números grandes (Seção 3 e etapas da Seção 5). */
@@ -23,7 +23,7 @@ export function Container({
   className?: string;
 }) {
   return (
-    <div className={`mx-auto w-full max-w-6xl px-5 md:px-8 ${className}`}>
+    <div className={`mx-auto w-full max-w-[1240px] px-5 md:px-8 ${className}`}>
       {children}
     </div>
   );
@@ -46,7 +46,7 @@ export function Label({
   );
 }
 
-/** H2 das seções: 30px → 36px → 44px. */
+/** H2 das seções: 30px → 36px → 48px. */
 export function Heading({
   children,
   className = "",
@@ -56,7 +56,7 @@ export function Heading({
 }) {
   return (
     <h2
-      className={`text-3xl leading-[1.15] font-medium tracking-tight text-balance md:text-4xl lg:text-[2.75rem] ${className}`}
+      className={`text-3xl leading-[1.15] font-medium tracking-tight text-balance md:text-4xl lg:text-5xl ${className}`}
     >
       {children}
     </h2>
@@ -113,13 +113,13 @@ const buttonBase =
 
 const buttonSizes = {
   /** CTA principal: w-full no celular, mínimo 340px a partir de sm. */
-  cta: "h-14 lg:h-16 w-full sm:w-auto sm:min-w-85 px-8 text-lg",
+  cta: "h-14 w-full sm:w-auto sm:min-w-85 px-8 text-lg",
   /** Mesmo CTA ocupando toda a largura disponível (formulário, menu mobile). */
-  ctaFull: "h-14 lg:h-16 w-full px-8 text-lg",
+  ctaFull: "h-14 w-full px-8 text-lg",
   /** Botão do formulário (compacto, largura total). */
   form: "h-12 lg:h-14 w-full px-6 text-base lg:text-lg",
   /** Botão do menu. */
-  menu: "h-10 px-5 text-sm",
+  menu: "h-11 px-6 text-sm",
 };
 
 const buttonVariants = {
