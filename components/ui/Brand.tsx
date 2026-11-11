@@ -14,9 +14,9 @@ export function Logo() {
         width={brand.symbol.width}
         height={brand.symbol.height}
         sizes="40px"
-        className="h-8 w-auto lg:h-9"
+        className="h-9 w-auto"
       />
-      <span className="text-base leading-none font-semibold tracking-tight whitespace-nowrap text-white lg:text-lg">
+      <span className="text-lg leading-none font-semibold tracking-tight whitespace-nowrap text-white">
         {brand.name}
       </span>
     </span>

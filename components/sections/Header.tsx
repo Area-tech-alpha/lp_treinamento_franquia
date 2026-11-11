@@ -43,7 +43,7 @@ export function Header() {
             : "bg-gradient-to-b from-ink/80 to-transparent"
         }`}
       >
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 md:px-8 lg:h-18">
+        <div className="mx-auto flex h-[72px] max-w-[1240px] items-center justify-between gap-4 px-5 md:px-8">
           <SmartLink
             href="/#inicio"
             aria-label="Alpha Business School — início"
@@ -58,7 +58,7 @@ export function Header() {
                 <li key={l.href}>
                   <SmartLink
                     href={l.href}
-                    className="text-sm text-white/80 transition-colors hover:text-alpha xl:text-base"
+                    className="text-base text-white/80 transition-colors hover:text-alpha"
                   >
                     {l.label}
                   </SmartLink>
@@ -90,7 +90,7 @@ export function Header() {
         <nav
           id="menu-mobile"
           aria-label="Menu mobile"
-          className="fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col overflow-y-auto bg-ink px-5 pt-6 pb-8 md:px-8 lg:hidden"
+          className="fixed inset-x-0 top-[72px] bottom-0 z-40 flex flex-col overflow-y-auto bg-ink px-5 pt-6 pb-8 md:px-8 lg:hidden"
         >
           <ul className="flex flex-col">
             {menu.links.map((l) => (

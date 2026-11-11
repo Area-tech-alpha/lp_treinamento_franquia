@@ -11,11 +11,11 @@ import {
   Tag,
 } from "@/components/ui/primitives";
 
-function PersonCard({ person }: { person: Person }) {
+function PersonCard({ person, wide = false }: { person: Person; wide?: boolean }) {
   const hasInfo = person.name || person.role || person.theme;
   return (
     <article className="group h-full overflow-hidden rounded-2xl border border-white/10 bg-ink-2">
-      <div className="relative aspect-[4/5] overflow-hidden">
+      <div className={`relative overflow-hidden ${wide ? "aspect-[4/5] md:aspect-[4/3]" : "aspect-[4/5]"}`}>
         <Photo
           img={person.image}
           sizes="(min-width: 1024px) 30vw, (min-width: 768px) 50vw, 85vw"
@@ -48,8 +48,8 @@ export function Guests() {
       <Container>
         <Reveal className="max-w-3xl">
           <Label>{guests.label}</Label>
-          <Heading className="mt-4">{guests.title}</Heading>
-          <p className={`mt-5 text-muted ${leadText}`}>{guests.text}</p>
+          <Heading className="mt-2">{guests.title}</Heading>
+          <p className={`mt-3 text-muted ${leadText}`}>{guests.text}</p>
           <div className="mt-6 flex flex-wrap gap-2.5">
             {guests.tags.map((t) => (
               <Tag key={t}>{t}</Tag>
@@ -60,8 +60,8 @@ export function Guests() {
         {/* Convidados: só aparece quando houver convidados em content/abs.ts */}
         {guests.items.length > 0 && (
           <SnapRow
-            className="mt-12"
-            cols="md:grid-cols-2 lg:grid-cols-4"
+            className="mt-8"
+            cols="md:grid-cols-2 lg:grid-cols-3"
             items={guests.items.map((p, i) => (
               <PersonCard key={i} person={p} />
             ))}
@@ -69,16 +69,16 @@ export function Guests() {
         )}
 
         {guests.team.length > 0 && (
-          <div className="mt-12">
+          <div className="mt-8">
             {guests.teamLine && (
               <p className="mb-6 max-w-3xl text-lg font-medium text-white md:text-xl">
                 {guests.teamLine}
               </p>
             )}
             <SnapRow
-              cols="md:grid-cols-2 lg:mx-auto lg:max-w-4xl"
+              cols={guests.team.length >= 3 ? "md:grid-cols-2 lg:grid-cols-3" : "md:grid-cols-2"}
               items={guests.team.map((p, i) => (
-                <PersonCard key={i} person={p} />
+                <PersonCard key={i} person={p} wide={guests.team.length < 3} />
               ))}
             />
           </div>

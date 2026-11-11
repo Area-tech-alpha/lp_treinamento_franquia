@@ -10,12 +10,15 @@ export function SnapCarousel({
   items,
   cols,
   label,
+  itemClassNames,
 }: {
   items: React.ReactNode[];
   /** Classes de grid a partir de md, ex.: "md:grid-cols-2 lg:grid-cols-4" */
   cols: string;
   /** Nome do carrossel para leitores de tela. */
   label: string;
+  /** Classes extras por item, na mesma ordem de items (ex.: "lg:col-span-2"). */
+  itemClassNames?: string[];
 }) {
   const listRef = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState(0);
@@ -44,7 +47,7 @@ export function SnapCarousel({
         className={`-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] md:mx-0 md:grid md:gap-5 md:overflow-visible md:px-0 md:pb-0 [&::-webkit-scrollbar]:hidden ${cols}`}
       >
         {items.map((item, i) => (
-          <li key={i} className="w-[85%] shrink-0 snap-start md:w-auto">
+          <li key={i} className={`w-[85%] shrink-0 snap-start md:w-auto ${itemClassNames?.[i] ?? ""}`}>
             {item}
           </li>
         ))}

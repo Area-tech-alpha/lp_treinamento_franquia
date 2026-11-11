@@ -40,13 +40,13 @@ export function About() {
       <Container>
         <Reveal className="mx-auto max-w-3xl text-center">
           <Label>{about.label}</Label>
-          <Heading className="mt-4">{about.title}</Heading>
-          <p className={`mx-auto mt-5 max-w-3xl text-muted ${leadText}`}>{about.text}</p>
+          <Heading className="mt-2">{about.title}</Heading>
+          <p className={`mx-auto mt-3 max-w-3xl text-muted ${leadText}`}>{about.text}</p>
         </Reveal>
 
         <Reveal delay={100}>
           {/* Desktop: símbolo no centro e pilares orbitando, ligados por linhas */}
-          <div className="relative mt-12 hidden aspect-[16/9] overflow-hidden rounded-2xl border border-alpha/20 bg-ink-2 lg:block">
+          <div className="relative mt-8 hidden aspect-[16/9] overflow-hidden rounded-2xl border border-alpha/20 bg-ink-2 lg:block">
             <div className="absolute inset-0 bg-[radial-gradient(28rem_18rem_at_50%_50%,rgba(255,171,0,0.15),transparent)]" />
             <svg
               aria-hidden="true"
@@ -94,11 +94,11 @@ export function About() {
           </div>
 
           {/* Mobile/tablet: símbolo em cima e pilares em grid 2x3, sem órbita */}
-          <div className="mt-10 rounded-2xl border border-alpha/20 bg-ink-2 px-4 py-10 sm:px-6 lg:hidden">
+          <div className="mt-8 rounded-2xl border border-alpha/20 bg-ink-2 px-4 py-10 sm:px-6 lg:hidden">
             <div className="flex justify-center">
               <AbsSymbol className="size-28 sm:size-32" />
             </div>
-            <ul className="mt-10 grid grid-cols-2 gap-3">
+            <ul className="mt-8 grid grid-cols-2 gap-3">
               {about.pillars.map((p) => (
                 <li key={p.label}>
                   <Pillar {...p} />
@@ -109,7 +109,7 @@ export function About() {
         </Reveal>
 
         <Reveal delay={150}>
-          <div className="mt-6 flex flex-col items-stretch justify-between gap-6 rounded-2xl border border-white/10 bg-ink-3 p-6 lg:flex-row lg:items-center lg:p-8">
+          <div className="mt-5 flex flex-col items-stretch justify-between gap-6 rounded-2xl border border-white/10 bg-ink-3 p-6 lg:flex-row lg:items-center lg:p-8">
             <p className="max-w-2xl text-lg leading-snug font-medium text-white md:text-xl">
               {about.strip.text}
             </p>

@@ -21,7 +21,7 @@ export function Hero() {
   return (
     <section
       id="inicio"
-      className="relative isolate flex items-center overflow-hidden bg-ink pt-16 lg:min-h-[max(40rem,85svh)] lg:pt-18"
+      className="relative isolate flex items-center overflow-hidden bg-ink pt-[72px] lg:min-h-[560px]"
     >
       {/* Fundo: foto escurecida (P&B por padrão; ver hero.treatment) */}
       <Image
@@ -44,15 +44,15 @@ export function Hero() {
         style={{ background: "linear-gradient(90deg, rgba(255,171,0,0.35), transparent)" }}
       />
 
-      <Container className="grid items-center gap-8 py-12 md:py-16 lg:grid-cols-[55%_45%] lg:gap-0 lg:py-16">
+      <Container className="grid items-center gap-8 py-10 md:py-12 lg:grid-cols-[55%_45%] lg:gap-0 lg:py-12">
         {/* Símbolo: à direita no desktop, acima do texto no celular */}
         <Reveal className="flex justify-center lg:order-2">
-          <div className="relative size-40 sm:size-48 md:size-56 lg:size-100 xl:size-120">
+          <div className="relative size-40 sm:size-48 md:size-56 lg:size-80 xl:size-96">
             <Image
               src={brand.symbol.src}
               alt=""
               fill
-              sizes="(min-width: 1280px) 320px, (min-width: 1024px) 260px, 200px"
+              sizes="(min-width: 1280px) 384px, (min-width: 1024px) 320px, 224px"
               className="object-contain"
               style={symbolGlow}
             />
@@ -61,13 +61,13 @@ export function Hero() {
 
         <div className="lg:order-1 lg:pr-8">
           <Reveal>
-            <h1 className="text-4xl leading-[1.1] font-medium tracking-tight text-balance md:text-5xl lg:text-6xl">
+            <h1 className="text-4xl leading-[1.1] font-medium tracking-tight text-balance md:text-5xl lg:text-[64px]">
               {before}
               <span className="text-alpha">{hero.highlight}</span>
             </h1>
           </Reveal>
           <Reveal delay={80}>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/90 lg:text-xl">
+            <p className="mt-4 max-w-xl text-lg leading-relaxed text-white/90">
               {hero.sub}
             </p>
           </Reveal>

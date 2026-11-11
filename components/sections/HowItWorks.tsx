@@ -21,8 +21,8 @@ export function HowItWorks() {
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
           <Reveal>
             <Label>{howItWorks.label}</Label>
-            <Heading className="mt-4">{howItWorks.title}</Heading>
-            <p className={`mt-5 max-w-xl text-muted ${leadText}`}>{howItWorks.text}</p>
+            <Heading className="mt-2">{howItWorks.title}</Heading>
+            <p className={`mt-3 max-w-xl text-muted ${leadText}`}>{howItWorks.text}</p>
           </Reveal>
           <Reveal delay={100}>
             <div className="relative h-60 overflow-hidden rounded-2xl border border-alpha/20 sm:h-80 lg:h-95">
@@ -32,11 +32,11 @@ export function HowItWorks() {
           </Reveal>
         </div>
 
-        <ol className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+        <ol className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {howItWorks.steps.map((s, i) => (
             <Reveal as="li" key={s.number} delay={i * 90}>
               <article
-                className={`relative h-full overflow-hidden rounded-2xl border border-alpha/20 bg-ink-2 transition-colors duration-300 hover:border-alpha/50 ${cardPad}`}
+                className={`relative h-full overflow-hidden rounded-2xl border border-alpha/20 bg-ink-2 transition-colors duration-300 hover:border-alpha/50 lg:min-h-80 ${cardPad}`}
               >
                 <div className="absolute -top-16 -right-16 size-40 rounded-full bg-alpha/10 blur-2xl" />
                 <p className={bigNumber}>{s.number}</p>
