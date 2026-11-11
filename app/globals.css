@@ -6,44 +6,48 @@
 
 @theme {
   --color-ink: #0a0a0a;
-  --color-ink-2: #141414;
-  --color-ink-3: #1c1c1c;
-  --color-alpha: #ffd400;
-  --color-alpha-soft: #ffe566;
-  --color-gold: #e0a800;
+  --color-ink-2: #121212;
+  --color-ink-3: #1b1b1b;
+  /* Cor oficial da marca: #FFAB00. Tons derivados para hover/glow. */
+  --color-alpha: #ffab00;
+  --color-alpha-light: #ffc040; /* hover (≈ #FFAB00 + 25% branco) */
+  --color-alpha-dark: #cc8900; /* contraste em fundo claro */
   --color-muted: #a3a3a3;
   --color-muted-dark: #5c5c5c;
 
-  --animate-marquee: marquee 40s linear infinite;
-  --animate-float: float 6s ease-in-out infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-spin-slow: spin 60s linear infinite;
+  --animate-pulse-glow: pulse-glow 4s ease-in-out infinite;
 
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
   @keyframes float {
     0%,
     100% {
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-10px);
+      transform: translateY(-8px);
+    }
+  }
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 0.9;
     }
   }
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 5.5rem;
 }
 
 body {
   background: var(--color-ink);
   color: #fff;
+  overflow-x: clip;
 }
 
 ::selection {
@@ -51,33 +55,30 @@ body {
   color: var(--color-ink);
 }
 
-/* Glow amarelo/dourado nas laterais das seções escuras */
+/* Glow âmbar nas laterais das seções escuras */
 @utility glow-sides {
   background:
     radial-gradient(
-      40rem 30rem at -10% 30%,
-      color-mix(in oklab, var(--color-alpha) 22%, transparent),
+      38rem 30rem at -12% 25%,
+      color-mix(in oklab, var(--color-alpha) 20%, transparent),
       transparent 70%
     ),
     radial-gradient(
-      36rem 28rem at 110% 75%,
-      color-mix(in oklab, var(--color-gold) 22%, transparent),
+      34rem 28rem at 112% 78%,
+      color-mix(in oklab, var(--color-alpha) 18%, transparent),
       transparent 70%
     ),
     var(--color-ink);
 }
 
-@utility glow-bottom {
-  background:
-    radial-gradient(
-      50rem 22rem at 50% 120%,
-      color-mix(in oklab, var(--color-alpha) 30%, transparent),
-      transparent 70%
-    ),
-    var(--color-ink);
+/* Símbolo ABS (alpha-simbolo.png) em âmbar luminoso */
+@utility abs-glow {
+  filter: drop-shadow(0 0 6px rgba(255, 171, 0, 0.95))
+    drop-shadow(0 0 22px rgba(255, 171, 0, 0.7))
+    drop-shadow(0 0 60px rgba(255, 171, 0, 0.45));
 }
 
-/* Animação de entrada no scroll (ver components/ui/Reveal.tsx) */
+/* Entrada no scroll (components/ui/Reveal.tsx) */
 .reveal {
   opacity: 0;
   transform: translateY(24px);
@@ -100,13 +101,13 @@ body {
     transform: none;
     transition: none;
   }
-  .animate-marquee,
-  .animate-float {
+  .animate-float,
+  .animate-spin-slow,
+  .animate-pulse-glow {
     animation: none;
   }
 }
 
-/* Accordion do FAQ */
 details > summary {
   list-style: none;
 }

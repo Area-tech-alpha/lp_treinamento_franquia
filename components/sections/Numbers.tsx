@@ -1,52 +1,76 @@
-import { numbers } from "@/content/home";
-import { Icon } from "@/components/ui/Icon";
-import { Photo } from "@/components/ui/Photo";
+import Image from "next/image";
+import { brand, numbers } from "@/content/abs";
 import { Reveal } from "@/components/ui/Reveal";
-import { Container, SectionTitle } from "@/components/ui/primitives";
+import { Container, Heading, sectionY } from "@/components/ui/primitives";
 
+const COLS: Record<number, string> = {
+  1: "",
+  2: "md:grid-cols-2",
+  3: "md:grid-cols-3",
+  4: "md:grid-cols-2 xl:grid-cols-4",
+};
+
+/**
+ * Seção 3 — Números. Tudo centralizado.
+ * Fundo #0A0A0A com a logo da Alpha (alpha-logo.png) desfocada atrás dos cards,
+ * brilho âmbar leve no centro e vinheta escura nas bordas.
+ */
 export function Numbers() {
+  // Card com valor null some; os outros se reorganizam.
+  const items = numbers.items.filter((i) => i.value !== null);
+
   return (
-    <section className="bg-white py-20 text-ink sm:py-28">
+    <section className={`relative isolate overflow-hidden bg-ink ${sectionY}`}>
+      {/* Brilho âmbar leve no centro */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-30"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 55% at 50% 50%, rgba(255,171,0,0.08), transparent 70%)",
+        }}
+      />
+      {/* Logo da Alpha desfocada (decorativa) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-1/2 left-1/2 -z-20 w-[140%] max-w-none -translate-x-1/2 -translate-y-1/2 md:w-[90%] md:max-w-[1400px]"
+      >
+        <Image
+          src={brand.alphaLogo.src}
+          alt=""
+          width={brand.alphaLogo.width}
+          height={brand.alphaLogo.height}
+          sizes="(min-width: 768px) 90vw, 140vw"
+          className="h-auto w-full object-contain opacity-20 blur-[12px]"
+        />
+      </div>
+      {/* Vinheta escura nas bordas */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(ellipse 85% 80% at 50% 50%, transparent 45%, rgba(10,10,10,0.92) 100%)",
+        }}
+      />
+
       <Container>
-        <Reveal>
-          <SectionTitle
-            eyebrow={numbers.eyebrow}
-            title={numbers.title}
-            dark={false}
-            center
-          />
-        </Reveal>
+        <Heading className="mx-auto max-w-4xl text-center">{numbers.title}</Heading>
 
-        <Reveal delay={80}>
-          <figure className="relative mt-12 aspect-[16/9] overflow-hidden rounded-3xl bg-gradient-to-br from-ink-3 to-[#2a2410] sm:aspect-[21/9]">
-            <Photo
-              src={numbers.image.src}
-              alt={numbers.image.alt}
-              fill
-              sizes="(min-width: 1280px) 1216px, 100vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent" />
-            <figcaption className="absolute inset-x-0 bottom-0 p-5 text-sm font-medium text-white sm:p-8 sm:text-lg">
-              {numbers.imageCaption}
-            </figcaption>
-          </figure>
-        </Reveal>
-
-        <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {numbers.items.map((item, i) => (
+        <ul className={`mt-16 grid gap-8 ${COLS[items.length] ?? COLS[4]}`}>
+          {items.map((item, i) => (
             <Reveal as="li" key={item.label} delay={i * 80}>
-              <div className="h-full rounded-3xl border border-alpha/20 bg-ink p-7 shadow-[0_20px_50px_-25px_rgba(0,0,0,0.6)] transition-transform duration-300 hover:-translate-y-1">
-                <span className="grid size-12 place-items-center rounded-2xl bg-alpha/10 text-alpha ring-1 ring-alpha/30">
-                  <Icon name={item.icon} className="size-6" />
-                </span>
-                <p className="mt-8 text-4xl font-medium tracking-tight break-words text-white sm:text-5xl">
+              <div className="h-full rounded-3xl border border-alpha/25 bg-ink/70 p-8 backdrop-blur-md lg:p-10">
+                <p className="text-6xl leading-none font-semibold tracking-tight text-alpha lg:text-7xl">
                   {item.value}
                 </p>
-                <p className="mt-2 text-sm text-muted">{item.label}</p>
+                <p className="mt-5 text-lg text-white/85">{item.label}</p>
               </div>
             </Reveal>
           ))}
         </ul>
+
+        <p className="mt-16 text-center text-xl font-medium text-white">{numbers.closing}</p>
       </Container>
     </section>
   );

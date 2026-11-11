@@ -1,20 +1,26 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { header } from "@/content/home";
+import { menu } from "@/content/abs";
+import { Logo } from "@/components/ui/Brand";
 import { Icon } from "@/components/ui/Icon";
-import { Button, Logo } from "@/components/ui/primitives";
+import { Button, SmartLink } from "@/components/ui/primitives";
 
+/** Seção 0 — Menu fixo com âncoras + hambúrguer abaixo de 1280px. */
 export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("keydown", onKey);
+    };
   }, []);
 
   return (
@@ -22,40 +28,32 @@ export function Header() {
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
         scrolled || open
           ? "border-b border-white/10 bg-ink/90 backdrop-blur-md"
-          : "bg-transparent"
+          : "bg-gradient-to-b from-ink/80 to-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-20 lg:px-8">
-        <Link href="#inicio" aria-label="Alpha Assessoria — início">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-6 md:px-10">
+        <SmartLink href="/#inicio" aria-label="Alpha Business School — início">
           <Logo />
-        </Link>
+        </SmartLink>
 
-        <nav aria-label="Principal" className="hidden lg:block">
-          <ul className="flex items-center gap-7">
-            {header.nav.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="text-sm text-white/75 transition-colors hover:text-alpha"
+        <nav aria-label="Principal" className="hidden xl:block">
+          <ul className="flex items-center gap-9">
+            {menu.links.map((l) => (
+              <li key={l.href}>
+                <SmartLink
+                  href={l.href}
+                  className="text-base text-white/80 transition-colors hover:text-alpha"
                 >
-                  {item.label}
-                </Link>
+                  {l.label}
+                </SmartLink>
               </li>
             ))}
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-5 lg:flex">
-          <Link
-            href={header.studentLink.href}
-            className="text-sm font-medium text-white/75 transition-colors hover:text-white"
-          >
-            {header.studentLink.label}
-          </Link>
-          <Button href={header.cta.href} className="px-5 py-2.5">
-            {header.cta.label}
-          </Button>
-        </div>
+        <Button href={menu.cta.href} size="menu" className="max-xl:hidden">
+          {menu.cta.label}
+        </Button>
 
         <button
           type="button"
@@ -63,42 +61,37 @@ export function Header() {
           aria-expanded={open}
           aria-controls="menu-mobile"
           aria-label={open ? "Fechar menu" : "Abrir menu"}
-          className="grid size-10 place-items-center rounded-full text-white hover:bg-white/10 lg:hidden"
+          className="grid size-12 place-items-center rounded-full text-white hover:bg-white/10 xl:hidden"
         >
-          <Icon name={open ? "close" : "menu"} className="size-6" />
+          <Icon name={open ? "close" : "menu"} className="size-7" />
         </button>
       </div>
 
       {open && (
-        <div id="menu-mobile" className="border-t border-white/10 lg:hidden">
-          <nav aria-label="Menu mobile" className="px-4 py-6 sm:px-6">
-            <ul className="flex flex-col gap-1">
-              {header.nav.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className="block rounded-lg px-3 py-3 text-base text-white/85 hover:bg-white/5 hover:text-alpha"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-6 flex flex-col gap-3">
-              <Button href={header.cta.href} className="w-full" arrow>
-                {header.cta.label}
-              </Button>
-              <Button
-                href={header.studentLink.href}
-                variant="ghost"
-                className="w-full"
-              >
-                {header.studentLink.label}
-              </Button>
-            </div>
-          </nav>
-        </div>
+        <nav
+          id="menu-mobile"
+          aria-label="Menu mobile"
+          className="border-t border-white/10 px-6 pt-4 pb-8 md:px-10 xl:hidden"
+        >
+          <ul className="flex flex-col">
+            {menu.links.map((l) => (
+              <li key={l.href}>
+                <SmartLink
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-lg px-3 py-4 text-lg text-white/90 hover:bg-white/5 hover:text-alpha"
+                >
+                  {l.label}
+                </SmartLink>
+              </li>
+            ))}
+          </ul>
+          <div onClick={() => setOpen(false)} className="mt-4">
+            <Button href={menu.cta.href} size="ctaFull">
+              {menu.cta.label}
+            </Button>
+          </div>
+        </nav>
       )}
     </header>
   );

@@ -1,29 +1,30 @@
-"use client";
-
-import Image, { type ImageProps } from "next/image";
-import { useCallback, useState } from "react";
+import Image from "next/image";
+import type { Img } from "@/content/abs";
 
 /**
- * next/image com fallback: se o arquivo ainda não existir em /public/images,
- * a imagem some e fica só o fundo do container (gradiente escuro),
- * em vez do ícone de imagem quebrada.
+ * Foto do conteúdo (next/image, sempre com fill + object-cover).
+ * O recorte vem de `img.position` (object-position), definido em content/abs.ts.
  */
-export function Photo({ className = "", alt, ...props }: ImageProps) {
-  const [failed, setFailed] = useState(false);
-
-  // Cobre o caso em que a imagem falhou antes da hidratação (onError não dispara).
-  const ref = useCallback((img: HTMLImageElement | null) => {
-    if (img && img.complete && img.naturalWidth === 0) setFailed(true);
-  }, []);
-
-  if (failed || !props.src) return null;
+export function Photo({
+  img,
+  sizes,
+  className = "",
+  preload = false,
+}: {
+  img: Img;
+  sizes: string;
+  className?: string;
+  preload?: boolean;
+}) {
   return (
     <Image
-      {...props}
-      alt={alt}
-      ref={ref}
+      src={img.src}
+      alt={img.alt}
+      fill
+      sizes={sizes}
+      preload={preload}
       className={`object-cover ${className}`}
-      onError={() => setFailed(true)}
+      style={img.position ? { objectPosition: img.position } : undefined}
     />
   );
 }

@@ -1,5 +1,17 @@
 import Link from "next/link";
-import { Icon } from "./Icon";
+
+/* Escala tipográfica e de espaçamento (referência: staage.com) ---------------- */
+
+/** Padding vertical padrão das seções. */
+export const sectionY = "py-20 md:py-28 lg:py-36";
+/** Texto corrido. */
+export const leadText = "text-lg md:text-xl leading-relaxed";
+/** Título de card. */
+export const cardTitle = "text-xl md:text-2xl font-semibold leading-snug";
+/** Texto de card. */
+export const cardText = "text-base md:text-lg leading-relaxed";
+/** Padding de card. */
+export const cardPad = "p-8 lg:p-10";
 
 export function Container({
   children,
@@ -9,13 +21,14 @@ export function Container({
   className?: string;
 }) {
   return (
-    <div className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>
+    <div className={`mx-auto w-full max-w-7xl px-6 md:px-10 ${className}`}>
       {children}
     </div>
   );
 }
 
-export function Eyebrow({
+/** Rótulo de seção: CAPS, âmbar. */
+export function Label({
   children,
   className = "",
 }: {
@@ -24,138 +37,139 @@ export function Eyebrow({
 }) {
   return (
     <p
-      className={`text-xs font-semibold uppercase tracking-[0.2em] text-alpha ${className}`}
+      className={`text-sm font-semibold tracking-[0.2em] text-alpha uppercase ${className}`}
     >
       {children}
     </p>
   );
 }
 
-export function SectionTitle({
-  eyebrow,
-  title,
-  text,
-  dark = true,
-  center = false,
+/** H2 das seções: text-3xl no mobile, text-5xl no desktop. */
+export function Heading({
+  children,
   className = "",
 }: {
-  eyebrow?: string;
-  title: string;
-  text?: string;
-  dark?: boolean;
-  center?: boolean;
+  children: React.ReactNode;
   className?: string;
 }) {
   return (
-    <div
-      className={`${center ? "mx-auto text-center" : ""} max-w-3xl ${className}`}
+    <h2
+      className={`text-3xl leading-[1.1] font-medium tracking-tight text-balance md:text-5xl ${className}`}
     >
-      {eyebrow && (
-        <Eyebrow className={dark ? "" : "text-gold"}>{eyebrow}</Eyebrow>
-      )}
-      <h2
-        className={`mt-3 text-3xl font-medium leading-tight tracking-tight text-balance sm:text-4xl lg:text-5xl ${
-          dark ? "text-white" : "text-ink"
-        }`}
-      >
-        {title}
-      </h2>
-      {text && (
-        <p
-          className={`mt-4 text-base leading-relaxed sm:text-lg ${
-            dark ? "text-muted" : "text-muted-dark"
-          }`}
-        >
-          {text}
-        </p>
-      )}
-    </div>
+      {children}
+    </h2>
   );
 }
 
-type ButtonProps = {
+/** http(s) abre em nova aba; âncoras (#x, /#x) rolam suave; o resto é rota interna. */
+export const isExternal = (href: string) => /^https?:\/\//.test(href);
+const isAnchor = (href: string) => href.startsWith("#") || href.startsWith("/#");
+
+export function SmartLink({
+  href,
+  className,
+  children,
+  onClick,
+  ...rest
+}: {
   href: string;
-  children: React.ReactNode;
-  variant?: "primary" | "ghost" | "dark";
   className?: string;
-  arrow?: boolean;
+  children: React.ReactNode;
+  onClick?: () => void;
+} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">) {
+  if (isExternal(href)) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        onClick={onClick}
+        {...rest}
+      >
+        {children}
+      </a>
+    );
+  }
+  if (isAnchor(href)) {
+    return (
+      <a href={href} className={className} onClick={onClick} {...rest}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={className} onClick={onClick} {...rest}>
+      {children}
+    </Link>
+  );
+}
+
+/* Botões no padrão Staage: largura fixa grande, rounded-lg, sem seta. ------- */
+const buttonBase =
+  "inline-flex items-center justify-center gap-3 rounded-lg font-bold whitespace-nowrap transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alpha disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0";
+
+const buttonSizes = {
+  /** CTA principal: w-full no celular, 420px no desktop. */
+  cta: "h-16 w-full px-8 text-xl sm:h-[76px] sm:w-[420px] sm:text-2xl",
+  /** Mesmo CTA ocupando toda a largura disponível (formulário). */
+  ctaFull: "h-16 w-full px-8 text-xl sm:h-[76px] sm:text-2xl",
+  /** Mesmo formato, texto menor (para rótulos longos). */
+  ctaCompact: "h-16 w-full px-6 text-lg sm:h-[76px] sm:w-[420px] sm:text-xl",
+  /** Botão do menu. */
+  menu: "h-12 px-6 text-base",
 };
 
-/** Links http(s) (WhatsApp) abrem em nova aba; âncoras (#secao) rolam suave. */
-export const isExternal = (href: string) => /^https?:\/\//.test(href);
+const buttonVariants = {
+  primary:
+    "bg-alpha text-black shadow-[0_10px_30px_rgba(255,171,0,0.35)] hover:-translate-y-0.5 hover:brightness-110",
+  ghost:
+    "border-2 border-white/25 text-white hover:-translate-y-0.5 hover:border-alpha hover:text-alpha",
+};
+
+export function buttonClass(
+  variant: keyof typeof buttonVariants = "primary",
+  size: keyof typeof buttonSizes = "cta",
+) {
+  return `${buttonBase} ${buttonSizes[size]} ${buttonVariants[variant]}`;
+}
 
 export function Button({
   href,
   children,
   variant = "primary",
+  size = "cta",
   className = "",
-  arrow = false,
-}: ButtonProps) {
-  const styles = {
-    primary:
-      "bg-alpha text-ink hover:bg-alpha-soft shadow-[0_8px_30px_-8px_rgba(255,212,0,0.55)]",
-    ghost: "border border-white/20 text-white hover:border-alpha hover:text-alpha",
-    dark: "bg-ink text-white hover:bg-ink-3",
-  }[variant];
-
-  const cls = `group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-alpha ${styles} ${className}`;
-
-  const content = (
-    <>
-      {children}
-      {arrow && (
-        <Icon
-          name="arrow"
-          className="size-4 transition-transform group-hover:translate-x-0.5"
-        />
-      )}
-    </>
-  );
-
-  if (isExternal(href)) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
-        {content}
-      </a>
-    );
-  }
+}: {
+  href: string;
+  children: React.ReactNode;
+  variant?: keyof typeof buttonVariants;
+  size?: keyof typeof buttonSizes;
+  className?: string;
+}) {
   return (
-    <Link href={href} className={cls}>
-      {content}
-    </Link>
+    <SmartLink href={href} className={`${buttonClass(variant, size)} ${className}`}>
+      {children}
+    </SmartLink>
   );
 }
 
 export function Tag({
   children,
-  dark = true,
+  light = false,
 }: {
   children: React.ReactNode;
-  dark?: boolean;
+  light?: boolean;
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${
-        dark
-          ? "border-alpha/30 bg-alpha/10 text-alpha"
-          : "border-ink/15 bg-ink/5 text-ink"
+      className={`inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-semibold tracking-[0.12em] uppercase ${
+        light
+          ? "border-ink/15 bg-ink/5 text-ink"
+          : "border-alpha/35 bg-alpha/10 text-alpha"
       }`}
     >
       {children}
-    </span>
-  );
-}
-
-/** Wordmark provisório. Troque por <Image src="/images/logo.svg" /> quando tiver o arquivo. */
-export function Logo({ className = "" }: { className?: string }) {
-  return (
-    <span className={`inline-flex items-center gap-2 ${className}`}>
-      <span className="grid size-8 place-items-center rounded-lg bg-alpha text-lg font-bold text-ink">
-        α
-      </span>
-      <span className="text-lg font-semibold tracking-tight text-white">
-        Alpha<span className="text-alpha">.</span>
-      </span>
     </span>
   );
 }

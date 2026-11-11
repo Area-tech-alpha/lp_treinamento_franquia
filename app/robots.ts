@@ -3,12 +3,12 @@ import { siteUrl } from "@/lib/site-url";
 
 export default function robots(): MetadataRoute.Robots {
   // Deploys de preview da Vercel não devem ser indexados.
-  const isPreview = process.env.VERCEL_ENV === "preview";
-
+  if (process.env.VERCEL_ENV === "preview") {
+    return { rules: { userAgent: "*", disallow: "/" } };
+  }
   return {
-    rules: isPreview
-      ? { userAgent: "*", disallow: "/" }
-      : { userAgent: "*", allow: "/" },
+    // /obrigado não é bloqueado aqui de propósito: o noindex da página precisa ser lido.
+    rules: { userAgent: "*", allow: "/", disallow: "/api/" },
     sitemap: `${siteUrl}/sitemap.xml`,
   };
 }

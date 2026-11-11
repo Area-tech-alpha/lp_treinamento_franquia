@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 !.env.example
+
+# fotos originais em alta (não vão para o deploy)
+/_fotos-originais/

@@ -1,16 +1,17 @@
+import { About } from "@/components/sections/About";
 import { Audience } from "@/components/sections/Audience";
-import { Ecosystem } from "@/components/sections/Ecosystem";
-import { Events } from "@/components/sections/Events";
+import { Closing } from "@/components/sections/Closing";
+import { Deliverables } from "@/components/sections/Deliverables";
 import { Faq } from "@/components/sections/Faq";
-import { FinalCta } from "@/components/sections/FinalCta";
 import { Footer } from "@/components/sections/Footer";
+import { Guests } from "@/components/sections/Guests";
 import { Header } from "@/components/sections/Header";
 import { Hero } from "@/components/sections/Hero";
-import { Method } from "@/components/sections/Method";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { LeadSection } from "@/components/sections/LeadSection";
 import { Numbers } from "@/components/sections/Numbers";
-import { Partners } from "@/components/sections/Partners";
-import { Showcase } from "@/components/sections/Showcase";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { WhyNow } from "@/components/sections/WhyNow";
 
 export default function Home() {
   return (
@@ -18,16 +19,17 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
-        <Ecosystem />
+        <About />
         <Numbers />
-        <Method />
-        <Events />
-        <Showcase />
+        <HowItWorks />
+        <Guests />
         <Audience />
+        <WhyNow />
+        <Deliverables />
         <Testimonials />
-        <Partners />
-        <FinalCta />
+        <LeadSection />
         <Faq />
+        <Closing />
       </main>
       <Footer />
     </>
