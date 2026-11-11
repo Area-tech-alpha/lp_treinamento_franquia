@@ -7,16 +7,16 @@ import { brand } from "@/content/abs";
  */
 export function Logo() {
   return (
-    <span className="inline-flex items-center gap-3">
+    <span className="inline-flex items-center gap-2.5">
       <Image
         src={brand.symbol.src}
         alt=""
         width={brand.symbol.width}
         height={brand.symbol.height}
-        sizes="48px"
-        className="h-9 w-auto md:h-10"
+        sizes="40px"
+        className="h-8 w-auto lg:h-9"
       />
-      <span className="text-lg leading-none font-semibold tracking-tight whitespace-nowrap text-white md:text-xl">
+      <span className="text-base leading-none font-semibold tracking-tight whitespace-nowrap text-white lg:text-lg">
         {brand.name}
       </span>
     </span>
@@ -31,7 +31,7 @@ export function AlphaLogo({ className = "h-8 w-auto" }: { className?: string }) 
       alt={brand.alphaLogo.alt}
       width={brand.alphaLogo.width}
       height={brand.alphaLogo.height}
-      sizes="280px"
+      sizes="240px"
       className={className}
     />
   );
@@ -57,7 +57,7 @@ export function AbsSymbol({
         src={brand.symbol.src}
         alt={brand.symbol.alt}
         fill
-        sizes="400px"
+        sizes="320px"
         className="abs-glow relative object-contain"
       />
     </div>

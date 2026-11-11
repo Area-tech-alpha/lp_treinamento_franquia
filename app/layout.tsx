@@ -2,8 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { seo } from "@/content/abs";
 import { siteUrl } from "@/lib/site-url";
-import { RouteChangeTracker } from "@/components/tracking/RouteChangeTracker";
-import { GtmNoScript, TrackingScripts } from "@/components/tracking/TrackingScripts";
+import { AttributionCapture } from "@/components/AttributionCapture";
 import "./globals.css";
 
 const inter = Inter({
@@ -40,10 +39,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-BR" data-scroll-behavior="smooth" className={`${inter.variable} antialiased`}>
       <body className="min-h-full font-sans">
-        <GtmNoScript />
         {children}
-        <TrackingScripts />
-        <RouteChangeTracker />
+        <AttributionCapture />
       </body>
     </html>
   );

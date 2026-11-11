@@ -2,11 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { form, leadOptions, whatsapp } from "@/content/abs";
-import { leadSchema, UTM_KEYS } from "@/lib/lead-schema";
+import { form, leadOptions } from "@/content/abs";
+import { leadSchema } from "@/lib/lead-schema";
 import { maskPhone } from "@/lib/phone";
-import { LEAD_FLAG } from "@/lib/track";
-import { captureUtms } from "@/lib/utm";
+import { ATTRIBUTION_KEYS, getAttribution } from "@/lib/utm";
 import { buttonClass, SmartLink } from "@/components/ui/primitives";
 
 type ChoiceField = keyof typeof leadOptions;
@@ -26,8 +25,10 @@ const FIELD_ORDER: Field[] = [
   "consentimento",
 ];
 
+// Inputs h-11; no mobile, altura mínima de 40px reais e fonte de 16px (globals.css)
+// para o iOS não dar zoom.
 const inputCls =
-  "mt-2.5 block w-full rounded-xl border bg-white px-5 py-4 text-lg text-ink placeholder:text-ink/40 outline-none transition focus:border-alpha focus:ring-4 focus:ring-alpha/25";
+  "block h-11 w-full rounded-lg border bg-white px-4 text-base text-ink placeholder:text-ink/40 outline-none transition focus:border-alpha focus:ring-4 focus:ring-alpha/25 max-lg:h-[2.875rem]";
 
 export function LeadForm() {
   const router = useRouter();
@@ -44,14 +45,14 @@ export function LeadForm() {
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
 
-  // UTMs: lidas da URL na chegada, guardadas na sessão e escritas nos campos ocultos.
+  // Campos ocultos (briefing): preenchidos com a atribuição first-touch da sessão.
   useEffect(() => {
-    const utms = captureUtms();
+    const data = getAttribution();
     const el = formRef.current;
     if (!el) return;
-    for (const k of UTM_KEYS) {
+    for (const k of ATTRIBUTION_KEYS) {
       const input = el.elements.namedItem(k);
-      if (input instanceof HTMLInputElement) input.value = utms[k];
+      if (input instanceof HTMLInputElement) input.value = data[k];
     }
   }, []);
 
@@ -67,13 +68,14 @@ export function LeadForm() {
       ...text,
       ...choice,
       consentimento: consent,
-      // UTMs: campo oculto (preenchido na chegada) ou, como reserva, a sessão.
+      // atribuição: campos ocultos; se vazios, a guardada na sessão
       ...(() => {
-        const stored = captureUtms();
+        const stored = getAttribution();
         return Object.fromEntries(
-          UTM_KEYS.map((k) => [k, String(fd.get(k) || stored[k] || "")]),
+          ATTRIBUTION_KEYS.map((k) => [k, String(fd.get(k) || stored[k] || "")]),
         );
       })(),
+      pagina_envio: window.location.href,
       website: String(fd.get("website") ?? ""),
     };
 
@@ -87,9 +89,7 @@ export function LeadForm() {
       setErrors(next);
       const first = FIELD_ORDER.find((f) => next[f]);
       if (first) {
-        formRef.current
-          ?.querySelector<HTMLElement>(`[data-field="${first}"]`)
-          ?.focus();
+        formRef.current?.querySelector<HTMLElement>(`[data-field="${first}"]`)?.focus();
       }
       return;
     }
@@ -103,30 +103,23 @@ export function LeadForm() {
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error(String(res.status));
-      try {
-        sessionStorage.setItem(LEAD_FLAG, "1");
-      } catch {
-        /* ignore */
-      }
       router.push("/obrigado");
     } catch {
+      // Webhook fora de 2xx (502) ou falha de rede: mostra erro e não redireciona.
       setStatus("error");
     }
   }
 
   const fieldError = (f: Field) =>
     errors[f] ? (
-      <p id={`${f}-erro`} className="mt-2 text-base font-medium text-red-600">
+      <p id={`${f}-erro`} className="mt-1.5 text-sm font-medium text-red-600">
         {errors[f]}
       </p>
     ) : null;
 
-  const textInput = (
-    f: TextField,
-    props: React.InputHTMLAttributes<HTMLInputElement>,
-  ) => (
+  const textInput = (f: TextField, props: React.InputHTMLAttributes<HTMLInputElement>) => (
     <div>
-      <label htmlFor={f} className="text-base font-semibold text-ink md:text-lg">
+      <label htmlFor={f} className="mb-1.5 block text-sm font-semibold text-ink">
         {form.labels[f]}
       </label>
       <input
@@ -148,49 +141,44 @@ export function LeadForm() {
     </div>
   );
 
-  const choiceGroup = (f: ChoiceField, cols: string) => (
-    <fieldset>
-      <legend className="text-base font-semibold text-ink md:text-lg">
+  // Opções em chips (flex-wrap, largura pelo conteúdo). Radio real (sr-only) com foco visível.
+  const choiceGroup = (f: ChoiceField) => (
+    <div role="radiogroup" aria-labelledby={`${f}-label`}>
+      <p id={`${f}-label`} className="mb-1.5 text-sm font-semibold text-ink">
         {form.labels[f]}
-      </legend>
-      <div className={`mt-3 flex flex-wrap gap-3 ${cols}`}>
+      </p>
+      <div className="flex flex-wrap gap-2">
         {leadOptions[f].map((opt, i) => {
           const checked = choice[f] === opt;
           return (
-          <label
-            key={opt}
-            className={`relative flex min-w-max grow basis-0 cursor-pointer items-center gap-3 rounded-xl border whitespace-nowrap px-5 py-4 text-base font-medium text-ink md:text-lg transition has-checked:border-alpha has-checked:bg-alpha/15 has-checked:ring-2 has-checked:ring-alpha has-focus-visible:ring-4 has-focus-visible:ring-alpha/40 hover:border-ink/40 ${
-              errors[f] ? "border-red-400" : "border-ink/15"
-            }`}
-          >
-            <input
-              type="radio"
-              name={f}
-              value={opt}
-              checked={checked}
-              data-field={i === 0 ? f : undefined}
-              aria-describedby={errors[f] ? `${f}-erro` : undefined}
-              onChange={() => {
-                setChoice((c) => ({ ...c, [f]: opt }));
-                clearError(f);
-              }}
-              className="sr-only"
-            />
-            <span
-              aria-hidden="true"
-              className={`grid size-6 shrink-0 place-items-center rounded-full border-2 ${
-                checked ? "border-alpha bg-alpha" : "border-ink/25"
+            <label
+              key={opt}
+              className={`inline-flex h-10 cursor-pointer items-center rounded-full border px-4 text-sm font-medium whitespace-nowrap transition has-focus-visible:ring-4 has-focus-visible:ring-alpha/40 max-lg:h-auto max-lg:min-h-[2.875rem] ${
+                checked
+                  ? "border-alpha bg-alpha text-black"
+                  : `bg-white text-ink hover:border-ink/40 ${errors[f] ? "border-red-400" : "border-ink/15"}`
               }`}
             >
-              {checked && <span className="size-2.5 rounded-full bg-ink" />}
-            </span>
-            {opt}
-          </label>
+              <input
+                type="radio"
+                name={f}
+                value={opt}
+                checked={checked}
+                data-field={i === 0 ? f : undefined}
+                aria-describedby={errors[f] ? `${f}-erro` : undefined}
+                onChange={() => {
+                  setChoice((c) => ({ ...c, [f]: opt }));
+                  clearError(f);
+                }}
+                className="sr-only"
+              />
+              {opt}
+            </label>
           );
         })}
       </div>
       {fieldError(f)}
-    </fieldset>
+    </div>
   );
 
   const sending = status === "sending";
@@ -200,9 +188,9 @@ export function LeadForm() {
       ref={formRef}
       onSubmit={onSubmit}
       noValidate
-      className="space-y-8 rounded-3xl bg-white p-6 text-ink shadow-[0_40px_100px_-40px_rgba(255,171,0,0.45)] sm:p-10 lg:p-12"
+      className="flex flex-col gap-4 rounded-2xl bg-white p-6 text-ink shadow-[0_40px_100px_-40px_rgba(255,171,0,0.45)] lg:p-7"
     >
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {textInput("nome", { type: "text", autoComplete: "name", placeholder: "Seu nome" })}
         {textInput("whatsapp", {
           type: "tel",
@@ -210,11 +198,7 @@ export function LeadForm() {
           autoComplete: "tel-national",
           placeholder: "(00) 00000-0000",
         })}
-        {textInput("email", {
-          type: "email",
-          autoComplete: "email",
-          placeholder: "voce@agencia.com.br",
-        })}
+        {textInput("email", { type: "email", autoComplete: "email", placeholder: "voce@agencia.com.br" })}
         {textInput("agencia", {
           type: "text",
           autoComplete: "organization",
@@ -222,10 +206,10 @@ export function LeadForm() {
         })}
       </div>
 
-      {choiceGroup("faturamento", "")}
-      {choiceGroup("time", "")}
-      {choiceGroup("investimento", "")}
-      {choiceGroup("prazo", "")}
+      {choiceGroup("faturamento")}
+      {choiceGroup("time")}
+      {choiceGroup("investimento")}
+      {choiceGroup("prazo")}
 
       {/* Honeypot anti-spam (invisível para pessoas) */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
@@ -235,14 +219,13 @@ export function LeadForm() {
         </label>
       </div>
 
-      {/* Campos ocultos de UTM (preenchidos no envio a partir da sessão) */}
-      {UTM_KEYS.map((k) => (
-        // sem value/defaultValue: o React não pode sobrescrever o valor escrito no efeito
+      {/* Campos ocultos de atribuição (sem value: o React não sobrescreve o que o efeito grava) */}
+      {ATTRIBUTION_KEYS.map((k) => (
         <input key={k} type="hidden" name={k} />
       ))}
 
       <div>
-        <label className="flex cursor-pointer items-start gap-3 text-base text-ink/80">
+        <label className="flex cursor-pointer items-center gap-3 text-sm text-ink/80 max-lg:min-h-[2.875rem]">
           <input
             type="checkbox"
             data-field="consentimento"
@@ -253,7 +236,7 @@ export function LeadForm() {
             }}
             aria-invalid={!!errors.consentimento}
             aria-describedby={errors.consentimento ? "consentimento-erro" : undefined}
-            className="mt-0.5 size-6 shrink-0 accent-alpha"
+            className="size-5 shrink-0 accent-alpha"
           />
           <span>
             {form.consent.text} (
@@ -271,14 +254,8 @@ export function LeadForm() {
       </div>
 
       {status === "error" && (
-        <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-5 text-base text-red-700">
-          {form.error}{" "}
-          <SmartLink
-            href={whatsapp("Erro no formulário")}
-            className="font-semibold underline underline-offset-2"
-          >
-            Falar no WhatsApp
-          </SmartLink>
+        <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          {form.error}
         </div>
       )}
 
@@ -286,7 +263,7 @@ export function LeadForm() {
         type="submit"
         disabled={sending}
         aria-busy={sending}
-        className={buttonClass("primary", "ctaFull")}
+        className={buttonClass("primary", "form")}
       >
         {sending && (
           <svg className="size-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">

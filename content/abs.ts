@@ -9,8 +9,8 @@
  * - O que o briefing deixou só como [X], [nome], [data], [resultado] está como
  *   `null`. Enquanto for null, o elemento inteiro some da tela.
  * - Cada foto tem `src` + `alt` (o alt descreve a foto de verdade).
- * - Todo botão tem `href`: "#formulario" (rola até o formulário), "#secao" ou
- *   whatsapp("origem") para abrir o WhatsApp do time.
+ * - Todo botão tem `href` e rola suave até uma âncora da página ("#formulario"
+ *   ou "#secao"). Nenhum botão leva para fora da LP.
  *
  * FALTA PREENCHER (campos null / listas vazias)
  * - stats.franqueados ......... nº de franqueados → hero, Seção 3, Seção 10 e Seção 13
@@ -49,18 +49,11 @@ export type IconName =
 /* -------------------------------------------------------------------------- */
 /* Links                                                                       */
 /* -------------------------------------------------------------------------- */
+/**
+ * WhatsApp do time (opcional, NEXT_PUBLIC_WHATSAPP_URL). Só é usado no botão
+ * "Falar com o time agora" da página /obrigado, que fica oculto sem a variável.
+ */
 const WHATSAPP_URL = process.env.NEXT_PUBLIC_WHATSAPP_URL ?? "";
-
-/** Link do WhatsApp do time com mensagem dizendo de onde a pessoa veio. */
-export function whatsapp(origem: string): string {
-  if (!WHATSAPP_URL) return "/#formulario";
-  const url = new URL(WHATSAPP_URL);
-  url.searchParams.set(
-    "text",
-    `Olá! Vim pela página da Alpha Business School (${origem}) e quero falar com o time.`,
-  );
-  return url.toString();
-}
 
 const FORM = "#formulario";
 
@@ -478,8 +471,7 @@ export const form = {
   },
   submit: "Quero minha análise",
   sending: "Enviando...",
-  error:
-    "Não conseguimos enviar agora. Tente de novo em instantes ou fale com o time no WhatsApp.",
+  error: "Não conseguimos enviar agora. Tente de novo em instantes.",
 };
 
 /* -------------------------------------------------------------------------- */
@@ -549,7 +541,7 @@ export const closing = {
     { label: "Quero minha análise", href: FORM },
     {
       label: "Falar com o time no WhatsApp",
-      href: whatsapp("Fechamento - Falar com o time"),
+      href: FORM, // mantém o texto/ícone de WhatsApp, mas rola até o formulário
     },
   ],
 };
@@ -561,7 +553,7 @@ export const footer = {
   links: [
     { label: "Sobre", href: "/#o-que-e" },
     { label: "Dúvidas", href: "/#duvidas" },
-    { label: "Contato", href: whatsapp("Rodapé - Contato") },
+    { label: "Contato", href: "/#formulario" },
     { label: "Política de privacidade", href: "/privacidade" },
   ],
   instagram: null as string | null, // URL do Instagram
@@ -570,7 +562,8 @@ export const footer = {
 
 export const thanks = {
   title: "Recebemos! Agora fique de olho no WhatsApp.",
-  cta: { label: "Falar com o time agora", href: whatsapp("Página de obrigado") },
+  // Só aparece se NEXT_PUBLIC_WHATSAPP_URL existir.
+  cta: WHATSAPP_URL ? { label: "Falar com o time agora", href: WHATSAPP_URL } : null,
 };
 
 export const privacy = {

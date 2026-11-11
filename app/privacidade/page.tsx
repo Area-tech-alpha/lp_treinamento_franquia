@@ -12,10 +12,10 @@ export default function PrivacidadePage() {
   return (
     <>
       <Header />
-      <main className="mx-auto min-h-[70svh] w-full max-w-4xl px-6 pt-36 pb-24 md:px-10">
-        <h1 className="text-4xl font-medium tracking-tight md:text-6xl">{privacy.title}</h1>
+      <main className="mx-auto min-h-[70svh] w-full max-w-4xl px-5 pt-32 pb-20 md:px-8">
+        <h1 className="text-3xl font-medium tracking-tight md:text-5xl">{privacy.title}</h1>
         {privacy.body && (
-          <div className="mt-10 space-y-6 text-lg leading-relaxed text-white/80 md:text-xl">
+          <div className="mt-8 space-y-5 text-base leading-relaxed text-white/80 md:text-lg">
             {privacy.body.map((p, i) => (
               <p key={i}>{p}</p>
             ))}
