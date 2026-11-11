@@ -20,7 +20,6 @@ const FIELD_ORDER: Field[] = [
   "agencia",
   "faturamento",
   "time",
-  "investimento",
   "prazo",
   "consentimento",
 ];
@@ -208,7 +207,6 @@ export function LeadForm() {
 
       {choiceGroup("faturamento")}
       {choiceGroup("time")}
-      {choiceGroup("investimento")}
       {choiceGroup("prazo")}
 
       {/* Honeypot anti-spam (invisível para pessoas) */}

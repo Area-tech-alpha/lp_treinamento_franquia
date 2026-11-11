@@ -1,42 +1,37 @@
 import { testimonials, type Testimonial } from "@/content/abs";
 import { Photo } from "@/components/ui/Photo";
 import { Reveal } from "@/components/ui/Reveal";
-import { SnapRow } from "@/components/ui/SnapRow";
-import { cardPad, Container, Heading, sectionY } from "@/components/ui/primitives";
+import { SnapCarousel } from "@/components/ui/SnapCarousel";
+import { Container, Heading, sectionY } from "@/components/ui/primitives";
 
 function TestimonialCard({ t }: { t: Testimonial }) {
   return (
     <figure className="flex h-full flex-col overflow-hidden rounded-2xl bg-alpha text-ink shadow-[0_30px_70px_-30px_rgba(255,171,0,0.65)]">
       {t.photo && (
         <div className="relative aspect-[4/5]">
-          <Photo img={t.photo} sizes="(min-width: 1024px) 30vw, 85vw" />
+          <Photo img={t.photo} sizes="(min-width: 1024px) 25vw, 85vw" />
         </div>
       )}
-      <div className={`flex flex-1 flex-col ${cardPad}`}>
-        <p className="text-2xl leading-tight font-semibold tracking-tight md:text-3xl">{t.result}</p>
-        {(t.name || t.city) && (
-          <figcaption className="mt-6 border-t border-ink/15 pt-5">
-            {t.name && <span className="block text-lg font-semibold">{t.name}</span>}
-            {t.city && <span className="block text-base text-ink/70">{t.city}</span>}
-          </figcaption>
-        )}
+      <div className="flex flex-1 flex-col p-6">
+        <p className="text-sm leading-snug font-medium opacity-70 md:text-base">{t.antes}</p>
+        <p className="mt-1.5 text-2xl leading-tight font-bold tracking-tight">{t.depois}</p>
+        <figcaption className="mt-auto pt-5">
+          <div className="border-t border-ink/15 pt-4">
+            <span className="block text-base font-semibold">{t.name}</span>
+            {t.city && <span className="block text-sm text-ink/70">{t.city}</span>}
+          </div>
+        </figcaption>
       </div>
     </figure>
   );
 }
 
-/** Seção 10 — Depoimentos. Foto do abraço (P&B) ao fundo; carrossel no celular. */
+/**
+ * Seção 10 — Depoimentos. Foto do abraço (P&B) ao fundo.
+ * Desktop 4 colunas, tablet 2, mobile carrossel com bolinhas.
+ */
 export function Testimonials() {
-  // Depoimento com resultado null some; os outros se reorganizam.
-  const items = testimonials.items.filter((t) => t.result !== null);
-  const cols =
-    items.length >= 4
-      ? "md:grid-cols-2 lg:grid-cols-4"
-      : items.length === 3
-        ? "md:grid-cols-3"
-        : items.length === 2
-          ? "md:grid-cols-2 md:mx-auto md:max-w-4xl"
-          : "md:grid-cols-1 md:mx-auto md:max-w-xl";
+  const items = testimonials.items;
 
   return (
     <section id="resultados" className={`relative isolate overflow-hidden ${sectionY}`}>
@@ -49,13 +44,15 @@ export function Testimonials() {
           <Heading className="mx-auto max-w-3xl text-center">{testimonials.title}</Heading>
         </Reveal>
 
-        <SnapRow
-          className={`mt-12 ${items.length === 1 ? "max-md:[&>li]:w-full" : ""}`}
-          cols={cols}
-          items={items.map((t, i) => (
-            <TestimonialCard key={i} t={t} />
-          ))}
-        />
+        <div className="mt-12">
+          <SnapCarousel
+            label="Depoimentos de franqueados"
+            cols="md:grid-cols-2 lg:grid-cols-4"
+            items={items.map((t, i) => (
+              <TestimonialCard key={i} t={t} />
+            ))}
+          />
+        </div>
 
         <Reveal>
           {testimonials.more && (
@@ -63,7 +60,7 @@ export function Testimonials() {
               {testimonials.more}
             </p>
           )}
-          <p className="mt-5 text-center text-sm text-white/55">{testimonials.disclaimer}</p>
+          <p className="mt-6 text-center text-sm text-white/55">{testimonials.disclaimer}</p>
         </Reveal>
       </Container>
     </section>

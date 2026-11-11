@@ -45,7 +45,7 @@ As variáveis `NEXT_PUBLIC_*` são lidas no build. Depois de alterar uma delas, 
 - Todos os botões da página rolam até o formulário (`#formulario`). Nenhum leva para fora da LP.
 - Na primeira página da sessão, o site guarda (first-touch, em `sessionStorage`) `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `utm_id`, `gclid`, `fbclid`, a `landing_page` e o `referrer`. Esses valores vão em campos ocultos do formulário.
 - O formulário faz `POST /api/lead`. A validação (zod) roda no navegador e no servidor. O servidor monta o JSON abaixo e envia para `LEAD_WEBHOOK_URL`, com timeout de 10 s. Se o webhook responder fora de 2xx, a API devolve 502 e o formulário mostra um erro, sem redirecionar.
-- Chaves enviadas ao webhook (string vazia quando não houver valor): `nome`, `whatsapp` (só dígitos, com 55), `whatsapp_formatado`, `email`, `agencia`, `faturamento`, `tamanho_time`, `investimento`, `inicio`, `consentimento`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `utm_id`, `gclid`, `fbclid`, `landing_page`, `referrer`, `pagina_envio`, `user_agent`, `ip`, `origem` (`lp-alpha-business-school`) e `enviado_em` (ISO 8601, horário de São Paulo).
+- Chaves enviadas ao webhook (string vazia quando não houver valor): `nome`, `whatsapp` (só dígitos, com 55), `whatsapp_formatado`, `email`, `agencia`, `faturamento`, `tamanho_time`, `inicio`, `consentimento`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `utm_id`, `gclid`, `fbclid`, `landing_page`, `referrer`, `pagina_envio`, `user_agent`, `ip`, `origem` (`lp-alpha-business-school`) e `enviado_em` (ISO 8601, horário de São Paulo).
 - Sem `LEAD_WEBHOOK_URL` no ambiente local, o envio funciona e o JSON aparece só no terminal.
 
 ## Deploy na Vercel

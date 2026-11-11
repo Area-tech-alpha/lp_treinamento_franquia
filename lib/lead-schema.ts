@@ -26,7 +26,6 @@ export const leadFields = {
     .max(120, "Texto muito longo."),
   faturamento: z.enum(leadOptions.faturamento, { error: "Escolha o faturamento mensal." }),
   time: z.enum(leadOptions.time, { error: "Escolha o tamanho do time." }),
-  investimento: z.enum(leadOptions.investimento, { error: "Escolha uma opção." }),
   prazo: z.enum(leadOptions.prazo, { error: "Escolha quando quer começar." }),
   consentimento: z.literal(true, { error: "Para continuar, aceite receber contato." }),
 };
