@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme {
+  --color-ink: #0a0a0a;
+  --color-ink-2: #141414;
+  --color-ink-3: #1c1c1c;
+  --color-alpha: #ffd400;
+  --color-alpha-soft: #ffe566;
+  --color-gold: #e0a800;
+  --color-muted: #a3a3a3;
+  --color-muted-dark: #5c5c5c;
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--color-ink);
+  color: #fff;
+}
+
+::selection {
+  background: var(--color-alpha);
+  color: var(--color-ink);
+}
+
+/* Glow amarelo/dourado nas laterais das seções escuras */
+@utility glow-sides {
+  background:
+    radial-gradient(
+      40rem 30rem at -10% 30%,
+      color-mix(in oklab, var(--color-alpha) 22%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      36rem 28rem at 110% 75%,
+      color-mix(in oklab, var(--color-gold) 22%, transparent),
+      transparent 70%
+    ),
+    var(--color-ink);
+}
+
+@utility glow-bottom {
+  background:
+    radial-gradient(
+      50rem 22rem at 50% 120%,
+      color-mix(in oklab, var(--color-alpha) 30%, transparent),
+      transparent 70%
+    ),
+    var(--color-ink);
+}
+
+/* Animação de entrada no scroll (ver components/ui/Reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-marquee,
+  .animate-float {
+    animation: none;
+  }
+}
+
+/* Accordion do FAQ */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
