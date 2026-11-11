@@ -471,7 +471,7 @@ export const form = {
   },
   submit: "Quero minha análise",
   sending: "Enviando...",
-  error: "Não conseguimos enviar agora. Confira sua conexão e tente de novo em instantes.",
+  error: "Não conseguimos enviar agora. Tente de novo em instantes.",
 };
 
 /* -------------------------------------------------------------------------- */
