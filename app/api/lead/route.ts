@@ -69,7 +69,6 @@ export async function POST(request: Request) {
     agencia: lead.agencia,
     faturamento: lead.faturamento,
     tamanho_time: lead.time,
-    investimento: lead.investimento,
     inicio: lead.prazo,
     consentimento: true,
     utm_source: lead.utm_source,

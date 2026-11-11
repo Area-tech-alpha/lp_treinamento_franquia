@@ -4,7 +4,7 @@
  *
  * REGRAS
  * - Texto igual ao briefing. Valores que o briefing trazia entre colchetes
- *   (R$50 milhões, R$30 mil, 42 playbooks, 30 minutos, o seu investimento)
+ *   (R$50 milhões, 42 playbooks, 30 minutos, o seu investimento)
  *   aparecem normais, sem colchetes.
  * - O que o briefing deixou só como [X], [nome], [data], [resultado] está como
  *   `null`. Enquanto for null, o elemento inteiro some da tela.
@@ -20,7 +20,6 @@
  * - guests.team[].name / .role  nome e função dos 2 palestrantes do time Alpha
  * - guests.teamLine ........... nome e função do professor-âncora, consultores e monitores
  * - whyNow.nextStart .......... data do próximo início (Seção 8)
- * - testimonials.items[1..3] .. resultado, nome e cidade dos franqueados 2, 3 e 4
  * - logos.items ............... logos das empresas e franquias (lista vazia)
  * - faq "Quanto tempo por semana?" → duração e formato dos encontros
  * - footer.instagram .......... URL do Instagram
@@ -272,7 +271,7 @@ export const audience = {
   items: [
     {
       icon: "chart",
-      title: "Dono de agência travado nos 30-50 mil.",
+      title: "Para agências de marketing com faturamento travado.",
       text: "Fatura o mesmo há meses e não sabe qual alavanca mexer primeiro.",
     },
     {
@@ -387,7 +386,6 @@ export const deliverables = {
       "Para quem se certifica: convite para conhecer a franquia Alpha, com crédito na taxa.",
     ],
   },
-  investment: { label: "Investimento:", text: "a partir de R$30 mil." },
   guarantee: {
     title: "Garantia",
     text: "Business Score no início e no fim. Cumpriu presença e entregáveis e o score não evoluiu? Devolvemos o seu investimento.",
@@ -399,25 +397,27 @@ export const deliverables = {
 /* Seção 10 — Depoimentos (card com result null some)                          */
 /* -------------------------------------------------------------------------- */
 export type Testimonial = {
-  result: string | null;
-  name: string | null;
-  city: string | null;
-  photo: Img | null; // foto real, ex.: { src: "/images/depoimentos/nome.jpg", alt: "Nome" }
+  /** Linha menor (opacidade 70%): a situação antes. */
+  antes: string;
+  /** Linha grande e bold: o resultado. */
+  depois: string;
+  name: string;
+  city?: string; // opcional: some quando vazio
+  photo?: Img | null; // foto real, ex.: { src: "/images/depoimentos/nome.jpg", alt: "Nome" }
 };
 
 export const testimonials = {
   title: "Histórias reais de quem aplicou o método Alpha",
   background: crop(photos.abracoEventoPB, "50% 65%"),
   items: [
-    {
-      result: "De 30 mil/mês para + de R$1 milhão no 1º ano.",
-      name: "Kaique Takeshida",
-      city: "Goiânia",
-      photo: null,
-    },
-    { result: null, name: null, city: null, photo: null }, // Franqueado 2
-    { result: null, name: null, city: null, photo: null }, // Franqueado 3
-    { result: null, name: null, city: null, photo: null }, // Franqueado 4
+    { antes: "De R$30 mil/mês", depois: "+ de R$1 milhão no 1º ano", name: "Kaique Takeshida", city: "Goiânia" },
+    { antes: "Travados em R$30 mil/mês por 5 anos.", depois: "R$300 mil em 3 meses.", name: "Matheus e Bruno Lino" },
+    { antes: "Travados em R$20 mil/mês por 2 anos.", depois: "R$100 mil no 1º mês.", name: "Gabriel e João" },
+    { antes: "Travados em R$30 mil/mês por 2 anos.", depois: "R$160 mil em 4 meses.", name: "Allan e Yasmin" },
+    { antes: "Travada em R$30 mil/mês por 2 anos.", depois: "R$60 mil no 5º mês.", name: "Maria Eduarda" },
+    { antes: "Travado em R$30 mil/mês por 3 anos.", depois: "R$110 mil em 1 mês.", name: "Murilo" },
+    { antes: "Travado em R$30 mil/mês por 3 anos.", depois: "R$355 mil em 3 meses.", name: "Bruno Sendin" },
+    { antes: "Travados em R$30 mil/mês por 3 anos.", depois: "R$105 mil no 1º mês.", name: "Aleks e Gabriel" },
   ] as Testimonial[],
   // "… e mais [X] franqueados aplicando o método Alpha." — some enquanto stats.franqueados for null
   more: stats.franqueados
@@ -447,7 +447,6 @@ export const leadOptions = {
     "Acima de 300 mil",
   ],
   time: ["Só eu", "2 a 5", "6 a 15", "Mais de 15"],
-  investimento: ["Sim, à vista", "Sim, parcelado", "Ainda não"],
   prazo: ["Próxima turma", "Em até 3 meses", "6 meses ou mais"],
 } as const;
 
@@ -461,7 +460,6 @@ export const form = {
     agencia: "Agência (nome ou @)",
     faturamento: "Faturamento mensal",
     time: "Tamanho do time",
-    investimento: "Tem R$30 mil para investir?",
     prazo: "Quando quer começar",
   },
   consent: {

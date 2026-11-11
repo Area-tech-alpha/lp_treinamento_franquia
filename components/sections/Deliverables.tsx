@@ -13,7 +13,7 @@ import {
 
 /** Seção 9 — O que você leva. 6 cards: 1 / 2 / 3 colunas. */
 export function Deliverables() {
-  const { bonus, guarantee, investment } = deliverables;
+  const { bonus, guarantee } = deliverables;
 
   return (
     <section className={`bg-white text-ink ${sectionY}`}>
@@ -75,28 +75,18 @@ export function Deliverables() {
           </div>
         </Reveal>
 
-        {/* Investimento + garantia */}
-        <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-6">
-          <Reveal>
-            <div className={`flex h-full flex-col justify-center rounded-2xl border border-ink/10 bg-ink/[0.03] ${cardPad}`}>
-              <p className="text-base text-ink/70 md:text-lg">{investment.label}</p>
-              <p className="mt-1 text-3xl font-semibold tracking-tight md:text-4xl">
-                {investment.text}
-              </p>
+        {/* Garantia */}
+        <Reveal>
+          <div className={`mt-6 flex gap-4 rounded-2xl border border-alpha/40 bg-alpha/10 ${cardPad}`}>
+            <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-alpha text-ink">
+              <Icon name="shield" className="size-5" />
+            </span>
+            <div>
+              <h3 className="text-lg font-semibold md:text-xl">{guarantee.title}</h3>
+              <p className={`mt-1.5 text-ink/80 ${cardText}`}>{guarantee.text}</p>
             </div>
-          </Reveal>
-          <Reveal delay={80}>
-            <div className={`flex h-full gap-4 rounded-2xl border border-alpha/40 bg-alpha/10 ${cardPad}`}>
-              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-alpha text-ink">
-                <Icon name="shield" className="size-5" />
-              </span>
-              <div>
-                <h3 className="text-lg font-semibold md:text-xl">{guarantee.title}</h3>
-                <p className={`mt-1.5 text-ink/80 ${cardText}`}>{guarantee.text}</p>
-              </div>
-            </div>
-          </Reveal>
-        </div>
+          </div>
+        </Reveal>
 
         <Reveal className="mt-10 flex justify-center">
           <Button href={deliverables.cta.href}>{deliverables.cta.label}</Button>
