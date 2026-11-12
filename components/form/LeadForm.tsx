@@ -55,6 +55,36 @@ export function LeadForm() {
     }
   }, []);
 
+  // Todo link para #formulario (menu, CTAs, rodapé) rola suave até o card e foca o Nome.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      const link = (e.target as Element | null)?.closest?.("a[href]");
+      if (!(link instanceof HTMLAnchorElement)) return;
+      if (link.hash !== "#formulario" || link.pathname !== window.location.pathname) return;
+      const target = document.getElementById("formulario");
+      const nome = document.getElementById("nome");
+      if (!target || !nome) return;
+      e.preventDefault();
+      history.replaceState(null, "", "#formulario");
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // Um frame depois: o drawer do menu mobile fecha e libera o scroll do body.
+      requestAnimationFrame(() => {
+        target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+        let done = false;
+        const focus = () => {
+          if (done) return;
+          done = true;
+          nome.focus({ preventScroll: true });
+        };
+        window.addEventListener("scrollend", focus, { once: true });
+        setTimeout(focus, reduce ? 0 : 900);
+      });
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
   const clearError = (f: Field) =>
     setErrors((e) => (e[f] ? { ...e, [f]: undefined } : e));
 
@@ -154,7 +184,7 @@ export function LeadForm() {
               key={opt}
               className={`inline-flex h-10 cursor-pointer items-center rounded-full border px-4 text-sm font-medium whitespace-nowrap transition has-focus-visible:ring-4 has-focus-visible:ring-alpha/40 lg:h-9 ${
                 checked
-                  ? "border-ink bg-ink text-white"
+                  ? "border-alpha bg-alpha text-black"
                   : `bg-white text-ink hover:border-ink/40 ${errors[f] ? "border-red-400" : "border-ink/15"}`
               }`}
             >
@@ -187,7 +217,7 @@ export function LeadForm() {
       ref={formRef}
       onSubmit={onSubmit}
       noValidate
-      className="flex flex-col gap-4 rounded-2xl bg-white p-6 text-ink shadow-[0_20px_60px_rgba(0,0,0,0.25)] lg:gap-3 lg:p-7"
+      className="flex flex-col gap-4 rounded-2xl bg-white p-6 text-ink border border-alpha/30 shadow-[0_20px_60px_rgba(0,0,0,0.5)] lg:gap-3 lg:p-7"
     >
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-3">
         {textInput("nome", { type: "text", autoComplete: "name", placeholder: "Seu nome" })}
@@ -261,7 +291,7 @@ export function LeadForm() {
         type="submit"
         disabled={sending}
         aria-busy={sending}
-        className={buttonClass("dark", "form")}
+        className={buttonClass("primary", "form")}
       >
         {sending && (
           <svg className="size-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
