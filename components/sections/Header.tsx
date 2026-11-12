@@ -40,7 +40,7 @@ export function Header() {
         className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
           scrolled || open
             ? "border-b border-white/10 bg-ink/95 backdrop-blur-md"
-            : "bg-ink"
+            : "bg-gradient-to-b from-ink/80 to-transparent"
         }`}
       >
         <div className="mx-auto flex h-[72px] max-w-[1240px] items-center justify-between gap-4 px-5 md:px-8">

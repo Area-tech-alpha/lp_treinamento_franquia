@@ -8,7 +8,7 @@ import { Guests } from "@/components/sections/Guests";
 import { Header } from "@/components/sections/Header";
 import { Hero } from "@/components/sections/Hero";
 import { HowItWorks } from "@/components/sections/HowItWorks";
-import { LeadSection, LogosSection } from "@/components/sections/LeadSection";
+import { LogosSection } from "@/components/sections/Logos";
 import { Numbers } from "@/components/sections/Numbers";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { WhyNow } from "@/components/sections/WhyNow";
@@ -18,7 +18,6 @@ export default function Home() {
     <>
       <Header />
       <main>
-        <LeadSection />
         <Hero />
         <About />
         <Numbers />

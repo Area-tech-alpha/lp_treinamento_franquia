@@ -146,7 +146,6 @@ export const hero = {
   headline: "Faça sua agência crescer com quem já fez a Alpha crescer.",
   highlight: "a Alpha crescer.",
   sub: "Treinamento individual para donos de agência: um plano feito só para o seu negócio, um monitor só seu e aulas reais com nomes renomados do mercado.",
-  cta: { label: "Quero minha análise", href: FORM },
   // Fundo full-bleed. Recorte: object-[center_45%] (fileira de trás + escultura de luz).
   image: photos.heroTimeAlpha,
   // "grayscale" (padrão): P&B + brightness 0.35 | "color": só escurecida (brightness 0.4)
@@ -179,7 +178,7 @@ export const about = {
   ] satisfies { icon: IconName; label: string }[],
   strip: {
     text: "Cada pilar é uma alavanca do mesmo resultado: crescer com método, não com sorte.",
-    cta: { label: "Conhecer o treinamento", href: "#como-funciona" },
+    cta: { label: "Conhecer o treinamento", href: FORM },
   },
 };
 
@@ -451,8 +450,6 @@ export const leadOptions = {
 } as const;
 
 export const form = {
-  title: "Sua agência começa a crescer com método agora.",
-  text: "Preencha e receba uma análise gratuita da sua agência. Nosso time te chama no WhatsApp em até 1 minuto.",
   labels: {
     nome: "Nome",
     whatsapp: "WhatsApp",
