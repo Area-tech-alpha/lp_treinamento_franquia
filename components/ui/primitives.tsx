@@ -125,6 +125,8 @@ const buttonSizes = {
 const buttonVariants = {
   primary:
     "bg-alpha text-black shadow-[0_10px_30px_rgba(255,171,0,0.35)] hover:-translate-y-0.5 hover:brightness-110",
+  /** Preto com texto âmbar: para fundos amarelos (formulário). */
+  dark: "bg-ink text-alpha shadow-[0_10px_30px_rgba(0,0,0,0.25)] hover:-translate-y-0.5 hover:bg-[#1a1a1a]",
   ghost:
     "border-2 border-white/25 text-white hover:-translate-y-0.5 hover:border-alpha hover:text-alpha",
 };
