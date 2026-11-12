@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/primitives";
 import { Footer } from "@/components/sections/Footer";
 import { Header } from "@/components/sections/Header";
+import { MetaLeadEvent } from "@/components/analytics/MetaLeadEvent";
 
 export const metadata: Metadata = {
   title: "Recebemos! | Alpha Business School",
@@ -34,6 +35,8 @@ export default function ObrigadoPage() {
         </div>
       </main>
       <Footer />
+      {/* Lead do pixel: só aqui, uma vez, com o mesmo eventID da CAPI */}
+      <MetaLeadEvent />
     </>
   );
 }
