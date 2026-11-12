@@ -38,6 +38,8 @@ export const leadSchema = z.object({
     ReturnType<typeof optionalText>
   >),
   pagina_envio: optionalText(1000),
+  // event_id do Lead (UUID gerado no navegador): o mesmo vai no pixel e na CAPI.
+  event_id: optionalText(64),
   // honeypot anti-spam: se vier preenchido, a API descarta em silêncio
   website: optionalText(500),
 });

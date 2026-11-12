@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { form, leadOptions } from "@/content/abs";
 import { leadSchema } from "@/lib/lead-schema";
 import { maskPhone } from "@/lib/phone";
+import { newEventId, storeLeadEventId } from "@/lib/meta-lead-event";
 import { ATTRIBUTION_KEYS, getAttribution } from "@/lib/utm";
 import { buttonClass, SmartLink } from "@/components/ui/primitives";
 
@@ -93,6 +94,8 @@ export function LeadForm() {
     if (status === "sending") return;
 
     const fd = new FormData(e.currentTarget);
+    // Mesmo id no Lead do pixel (/obrigado) e no da CAPI (servidor): deduplicação.
+    const eventId = newEventId();
     const payload = {
       ...text,
       ...choice,
@@ -106,6 +109,7 @@ export function LeadForm() {
       })(),
       pagina_envio: window.location.href,
       website: String(fd.get("website") ?? ""),
+      event_id: eventId,
     };
 
     const parsed = leadSchema.safeParse(payload);
@@ -132,6 +136,7 @@ export function LeadForm() {
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error(String(res.status));
+      storeLeadEventId(eventId);
       router.push("/obrigado");
     } catch {
       // Webhook fora de 2xx (502) ou falha de rede: mostra erro e não redireciona.

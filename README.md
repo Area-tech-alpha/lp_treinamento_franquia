@@ -37,6 +37,8 @@ Na Vercel, cadastre em **Project → Settings → Environment Variables**, marca
 | `LEAD_WEBHOOK_URL` | Sim | Webhook (n8n) que recebe os leads: planilha + mensagem no WhatsApp. Fica só no servidor e nunca vai para o navegador. Sem ela, o formulário dá erro em produção. |
 | `NEXT_PUBLIC_SITE_URL` | Sim | Domínio do site, ex.: `https://www.alphabusinessschool.com.br`. Usada na OG image, no canonical e no sitemap. |
 | `NEXT_PUBLIC_WHATSAPP_URL` | Não | WhatsApp do time (`https://wa.me/55...`). Só é usado no botão "Falar com o time agora" da página `/obrigado`. Sem ela, o botão fica oculto. |
+| `META_CAPI_TOKEN` | Sim, para a CAPI | Token de acesso da API de Conversões da Meta (Gerenciador de Eventos → pixel → Configurações → Gerar token). Cadastre como **Sensitive** na Vercel. Fica só no servidor e nunca vai para log, código ou commit. Sem ela, o Lead do servidor não é enviado (só um aviso no log) e o resto funciona. |
+| `META_CAPI_TEST_EVENT_CODE` | Não | Código da aba **Testar eventos** (ex.: `TEST12345`). Só para teste: com ela, os eventos do servidor aparecem em "Testar eventos" e **não contam para os anúncios**. Remova depois de testar. |
 
 As variáveis `NEXT_PUBLIC_*` são lidas no build. Depois de alterar uma delas, faça um novo deploy (**Deployments → ⋯ → Redeploy**).
 
@@ -47,6 +49,17 @@ As variáveis `NEXT_PUBLIC_*` são lidas no build. Depois de alterar uma delas, 
 - O formulário faz `POST /api/lead`. A validação (zod) roda no navegador e no servidor. O servidor monta o JSON abaixo e envia para `LEAD_WEBHOOK_URL`, com timeout de 10 s. Se o webhook responder fora de 2xx, a API devolve 502 e o formulário mostra um erro, sem redirecionar.
 - Chaves enviadas ao webhook (string vazia quando não houver valor): `nome`, `whatsapp` (só dígitos, com 55), `whatsapp_formatado`, `email`, `agencia`, `faturamento`, `tamanho_time`, `inicio`, `consentimento`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `utm_id`, `gclid`, `fbclid`, `landing_page`, `referrer`, `pagina_envio`, `user_agent`, `ip`, `origem` (`lp-alpha-business-school`) e `enviado_em` (ISO 8601, horário de São Paulo).
 - Sem `LEAD_WEBHOOK_URL` no ambiente local, o envio funciona e o JSON aparece só no terminal.
+
+## Meta Pixel e API de Conversões
+
+- Pixel `1769339974357043`, fixo em `lib/meta-pixels.ts` (não é variável de ambiente). Carregado em `app/layout.tsx`.
+- Todo evento leva `origem: "lp-alpha-business-school"`, `canal` (`navegador` ou `servidor`) e `pagina` (`lib/meta-event-origin.ts`).
+- **PageView** (navegador): em toda página.
+- **Lead** com deduplicação: no envio, o navegador gera um `event_id` (UUID) e manda junto no `POST /api/lead`.
+  - Servidor: depois de o webhook responder ok, envia o Lead pela CAPI (`lib/meta-capi.ts`) em `after()`, sem atrasar nem quebrar o envio. Vai com e-mail, telefone (com 55), primeiro e último nome em SHA-256, IP, user agent, `_fbp` e `_fbc` (sem cookie `_fbc` mas com `fbclid`, monta `fb.1.<timestamp>.<fbclid>`). Campos vazios são omitidos.
+  - Navegador: só em `/obrigado`, uma vez, com o mesmo `eventID`. Recarregar a página não dispara de novo. Com o pixel bloqueado, a página funciona normal e o Lead do servidor continua indo.
+- Logs da CAPI (`[meta-capi:...]` nos logs da Vercel): status HTTP, `eventsReceived` e `fbtraceId`, sem token e sem dados pessoais.
+- Para testar: cadastre `META_CAPI_TEST_EVENT_CODE`, envie um lead e confira em **Gerenciador de Eventos → Testar eventos**: PageView (navegador), Lead (navegador) e Lead (servidor) com o mesmo `event_id`, deduplicados. Depois remova a variável.
 
 ## Deploy na Vercel
 

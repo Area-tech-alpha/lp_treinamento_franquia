@@ -1,4 +1,8 @@
+import { randomUUID } from "node:crypto";
+import { cookies } from "next/headers";
+import { after } from "next/server";
 import { z } from "zod";
+import { resolveMetaClickIds, sendLeadToMetaCapi } from "@/lib/meta-capi";
 import { leadSchema } from "@/lib/lead-schema";
 
 /** Data/hora ISO 8601 no fuso America/Sao_Paulo, ex.: 2026-11-11T17:20:05-03:00 */
@@ -36,6 +40,8 @@ function maskUrl(raw: string): string {
  * POST /api/lead
  * Valida o lead (zod) e repassa para o webhook (LEAD_WEBHOOK_URL), que alimenta
  * a planilha e dispara o WhatsApp. A URL do webhook fica só no servidor.
+ * Com o webhook ok, agenda o Lead da CAPI (Meta) em after(): não atrasa nem
+ * quebra a resposta.
  */
 export async function POST(request: Request) {
   let body: unknown;
@@ -88,11 +94,33 @@ export async function POST(request: Request) {
     enviado_em: nowSaoPaulo(),
   };
 
+  // Dados da CAPI resolvidos agora (cookies da requisição); o envio fica para o after().
+  const cookieStore = await cookies();
+  const { fbc, fbp } = resolveMetaClickIds(
+    { fbc: cookieStore.get("_fbc")?.value, fbp: cookieStore.get("_fbp")?.value },
+    lead.fbclid || undefined,
+  );
+  const scheduleCapi = () =>
+    after(() =>
+      sendLeadToMetaCapi({
+        eventId: lead.event_id || randomUUID(),
+        eventSourceUrl: payload.pagina_envio || undefined,
+        email: lead.email,
+        phone: payload.whatsapp,
+        name: lead.nome,
+        ip: payload.ip || undefined,
+        userAgent: payload.user_agent || undefined,
+        fbp,
+        fbc,
+      }),
+    );
+
   const webhook = process.env.LEAD_WEBHOOK_URL?.trim();
   if (!webhook) {
     if (process.env.NODE_ENV !== "production") {
       // Em desenvolvimento, sem webhook configurado: só registra no terminal.
       console.info("[api/lead] LEAD_WEBHOOK_URL ausente (dev). Payload:", payload);
+      scheduleCapi();
       return Response.json({ ok: true, dev: true });
     }
     console.error("[api/lead] LEAD_WEBHOOK_URL ausente");
@@ -124,5 +152,6 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, error: "webhook" }, { status: 502 });
   }
 
+  scheduleCapi();
   return Response.json({ ok: true });
 }
