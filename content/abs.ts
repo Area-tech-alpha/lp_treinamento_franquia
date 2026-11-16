@@ -13,7 +13,7 @@
  *   ou "#secao"). Nenhum botão leva para fora da LP.
  *
  * FALTA PREENCHER (campos null / listas vazias)
- * - stats.franqueados ......... nº de franqueados → hero, Seção 3, Seção 10 e Seção 13
+ * - stats.franqueados ......... nº de franqueados → hero, Seção 3 e Seção 13
  * - stats.cidades ............. nº de cidades → Seção 13
  * - hero.proof.avatars ........ 5 fotos de franqueados (lista vazia)
  * - guests.items .............. Convidados 1 a 4: nome, cargo/empresa, tema, foto (lista vazia)
@@ -116,10 +116,6 @@ export const photos = {
     src: "/images/aperto-de-mao-certificado.jpg",
     alt: "Aperto de mão entre dois membros da Alpha de camisa amarela, um deles segurando um certificado",
   },
-  abracoEventoPB: {
-    src: "/images/abraco-evento-pb.jpg",
-    alt: "Participantes de terno se abraçando emocionados no salão do evento, em preto e branco",
-  },
 } satisfies Record<string, Img>;
 
 /** Mesma foto com outro recorte (CSS object-position). */
@@ -133,7 +129,6 @@ export const menu = {
     { label: "O que é", href: "/#o-que-e" },
     { label: "Como funciona", href: "/#como-funciona" },
     { label: "Convidados", href: "/#convidados" },
-    { label: "Resultados", href: "/#resultados" },
     { label: "Dúvidas", href: "/#duvidas" },
   ],
   cta: { label: "Quero minha análise", href: "/#formulario" },
@@ -143,8 +138,8 @@ export const menu = {
 /* Seção 1 — Hero                                                              */
 /* -------------------------------------------------------------------------- */
 export const hero = {
-  headline: "Faça sua agência crescer com quem já fez a Alpha crescer.",
-  highlight: "a Alpha crescer.",
+  headline: "Faça sua agência crescer com quem já faz 50MM por ano",
+  highlight: "50MM por ano",
   sub: "Treinamento individual para donos de agência: um plano feito só para o seu negócio, um monitor só seu e aulas reais com nomes renomados do mercado.",
   // Fundo full-bleed. Recorte: object-[center_45%] (fileira de trás + escultura de luz).
   image: photos.heroTimeAlpha,
@@ -390,40 +385,6 @@ export const deliverables = {
     text: "Business Score no início e no fim. Cumpriu presença e entregáveis e o score não evoluiu? Devolvemos o seu investimento.",
   },
   cta: { label: "Quero minha análise", href: FORM },
-};
-
-/* -------------------------------------------------------------------------- */
-/* Seção 10 — Depoimentos (card com result null some)                          */
-/* -------------------------------------------------------------------------- */
-export type Testimonial = {
-  /** Linha menor (opacidade 70%): a situação antes. */
-  antes: string;
-  /** Linha grande e bold: o resultado. */
-  depois: string;
-  name: string;
-  city?: string; // opcional: some quando vazio
-  photo?: Img | null; // foto real, ex.: { src: "/images/depoimentos/nome.jpg", alt: "Nome" }
-};
-
-export const testimonials = {
-  title: "Histórias reais de quem aplicou o método Alpha",
-  background: crop(photos.abracoEventoPB, "50% 65%"),
-  items: [
-    { antes: "De R$30 mil/mês", depois: "+ de R$1 milhão no 1º ano", name: "Kaique Takeshida", city: "Goiânia" },
-    { antes: "Travados em R$30 mil/mês por 5 anos.", depois: "R$300 mil em 3 meses.", name: "Matheus e Bruno Lino" },
-    { antes: "Travados em R$20 mil/mês por 2 anos.", depois: "R$100 mil no 1º mês.", name: "Gabriel e João" },
-    { antes: "Travados em R$30 mil/mês por 2 anos.", depois: "R$160 mil em 4 meses.", name: "Allan e Yasmin" },
-    { antes: "Travada em R$30 mil/mês por 2 anos.", depois: "R$60 mil no 5º mês.", name: "Maria Eduarda" },
-    { antes: "Travado em R$30 mil/mês por 3 anos.", depois: "R$110 mil em 1 mês.", name: "Murilo" },
-    { antes: "Travado em R$30 mil/mês por 3 anos.", depois: "R$355 mil em 3 meses.", name: "Bruno Sendin" },
-    { antes: "Travados em R$30 mil/mês por 3 anos.", depois: "R$105 mil no 1º mês.", name: "Aleks e Gabriel" },
-  ] as Testimonial[],
-  // "… e mais [X] franqueados aplicando o método Alpha." — some enquanto stats.franqueados for null
-  more: stats.franqueados
-    ? `… e mais ${stats.franqueados} franqueados aplicando o método Alpha.`
-    : null,
-  disclaimer:
-    "Resultados de franqueados da Alpha. Variam conforme a execução de cada negócio.",
 };
 
 /* -------------------------------------------------------------------------- */

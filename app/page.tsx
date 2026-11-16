@@ -10,7 +10,6 @@ import { Hero } from "@/components/sections/Hero";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { LogosSection } from "@/components/sections/Logos";
 import { Numbers } from "@/components/sections/Numbers";
-import { Testimonials } from "@/components/sections/Testimonials";
 import { WhyNow } from "@/components/sections/WhyNow";
 
 export default function Home() {
@@ -26,7 +25,6 @@ export default function Home() {
         <Audience />
         <WhyNow />
         <Deliverables />
-        <Testimonials />
         <LogosSection />
         <Faq />
         <Closing />
