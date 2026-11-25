@@ -130,9 +130,15 @@ export async function POST(request: Request) {
   // Logs de falha: nunca a URL completa nem os dados do lead.
   const target = maskUrl(webhook);
   try {
+    // LEAD_WEBHOOK_KEY: chave da entrada de leads do CRM (LEAD_INTAKE_FRANCHISE_KEY), mandada
+    // em x-api-key. Vazia = sem header (webhook antigo do n8n).
+    const webhookKey = process.env.LEAD_WEBHOOK_KEY?.trim();
     const res = await fetch(webhook, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(webhookKey && { "x-api-key": webhookKey }),
+      },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(10_000),
     });
