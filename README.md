@@ -34,7 +34,8 @@ Na Vercel, cadastre em **Project → Settings → Environment Variables**, marca
 
 | Variável | Obrigatória | Para que serve |
 |---|---|---|
-| `LEAD_WEBHOOK_URL` | Sim | Webhook (n8n) que recebe os leads: planilha + mensagem no WhatsApp. Fica só no servidor e nunca vai para o navegador. Sem ela, o formulário dá erro em produção. |
+| `LEAD_WEBHOOK_URL` | Sim | Para onde vão os leads. Hoje é o webhook do n8n (planilha + WhatsApp). Na virada, passa a ser a entrada de leads do CRM: `https://<api do CRM>/external/lead-intake/franchise/abs` (cria o lead na Comercial Franquias como ABS, grava a planilha e avisa o grupo). Fica só no servidor e nunca vai para o navegador. Sem ela, o formulário dá erro em produção. |
+| `LEAD_WEBHOOK_KEY` | Com o CRM | Chave da entrada de leads do CRM (`LEAD_INTAKE_FRANCHISE_KEY`), mandada no header `x-api-key`. Só servidor. Vazia = sem header (webhook do n8n). |
 | `NEXT_PUBLIC_SITE_URL` | Sim | Domínio do site, ex.: `https://www.alphabusinessschool.com.br`. Usada na OG image, no canonical e no sitemap. |
 | `NEXT_PUBLIC_WHATSAPP_URL` | Não | WhatsApp do time (`https://wa.me/55...`). Só é usado no botão "Falar com o time agora" da página `/obrigado`. Sem ela, o botão fica oculto. |
 | `META_CAPI_TOKEN` | Sim, para a CAPI | Token de acesso da API de Conversões da Meta (Gerenciador de Eventos → pixel → Configurações → Gerar token). Cadastre como **Sensitive** na Vercel. Fica só no servidor e nunca vai para log, código ou commit. Sem ela, o Lead do servidor não é enviado (só um aviso no log) e o resto funciona. |
